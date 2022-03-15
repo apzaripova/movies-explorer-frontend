@@ -1,0 +1,127 @@
+.about {
+    margin: 0 70px;
+    color: black;
+  }
+  
+  .about__heading {
+    padding: 90px 0 23px;
+    max-width: 100%;
+    border-bottom: 1px solid #000;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+  }
+  
+  .about__text-container {
+    display: flex;
+    margin: 70px 0 110px;
+  }
+  
+  .about__text-box {
+    max-width: 550px;
+    margin-right: 40px;
+  }
+  
+  .about__text-box:last-of-type {
+    margin: 0;
+  }
+  
+  .about__sub-heading {
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.04em;
+  }
+  
+  .about__paragraph {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  
+  .about__progress {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    column-gap: 0;
+    row-gap: 14px;
+    width: 100%;
+  }
+  
+  .about__progress-bar {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 9px 0;
+    background-color: #F2F2F2;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+  }
+  
+  .about__progress-bar_position_left {
+    color: black;
+    background-color: #3ddc84;
+  }
+  
+  .about__sub-text {
+    color: #8b8b8b;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .about {
+      margin: 0 50px;
+    }
+  
+    .about__heading {
+      padding: 90px 0 23px;
+    }
+  }
+  
+  @media screen and (max-width: 750px) {
+    .about__progress {
+      grid-template-columns: 1.5fr 3fr;
+    }
+  }
+  
+  @media screen and (max-width: 550px) {
+    .about {
+      margin: 0 18px;
+    }
+  
+    .about__text-container {
+      margin: 60px 0;
+      flex-direction: column;
+    }
+  
+    .about__text-box {
+      margin: 0 0 56px 0;
+    }
+  
+    .about__text-box:last-of-type {
+      margin: 0;
+    }
+  
+    .about__heading {
+      margin: 0;
+    }
+  
+    .about__sub-heading {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      line-height: 22px;
+    }
+  
+    .about__paragraph {
+      font-size: 11px;
+      line-height: 16px;
+    }
+  
+    .about__progress {
+      grid-template-columns: 1.5fr 2.5fr;
+    }
+  }

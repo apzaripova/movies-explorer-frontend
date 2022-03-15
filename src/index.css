@@ -1,13 +1,33 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import url("./blocks/root/page.css");
+@import url("./vendor/normalize.css");
+@import url("./fonts/inter.css");
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+/* General */
+@import url("./components/Header/Header.css");
+@import url("./components/Footer/Footer.css");
+
+/* Landing Page */
+@import url("./components/Navigation/Navigation.css");
+@import url("./components/About/About.css");
+@import url("./components/Technologies/Technologies.css");
+@import url("./components/Student/Student.css");
+
+/* Main */
+@import url("./components/SearchBar/SearchBar.css");
+@import url("./components/MoviesCardList/MoviesCardList.css");
+@import url("./components/MoviesCard/MoviesCard.css");
+
+/* Profile */
+@import url("./components/Profile/Profile.css");
+
+/* Authorization */
+@import url("./components/Authorization/Authorization.css");
+
+/* Sidebar */
+@import url("./components/Sidebar/Sidebar.css");
+
+/* NotFound */
+@import url("./components/NotFound/NotFound.css");
+
+/* Popup */
+@import url("./components/Popup/Popup.css");

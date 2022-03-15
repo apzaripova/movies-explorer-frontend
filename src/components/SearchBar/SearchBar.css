@@ -1,0 +1,79 @@
+@import url("./Checkbox.css");
+
+.search-bar {
+  margin: 0 70px;
+  padding: 70px 0 90px;
+}
+
+.search-bar__form {
+  position: relative;
+  border-bottom: 1px solid #E8E8E8;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-bar__input {
+  color: white;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 20px;
+  border: none;
+  width: 90%;
+}
+
+.search-bar__input:focus {
+  color: white;
+  outline: none;
+  background-color: #2e2e2e;
+  box-sizing: border-box;
+}
+
+.search-bar__submit {
+  width: 34px;
+  height: 34px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  transition: 0.2s;
+  background-image: url("../../images/svg/buttonSearch.svg");
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-color: transparent;
+}
+
+.search-bar__submit:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.search-bar__container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: calc(100% + 29px);
+  left: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.search-bar__placeholder {
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 18px;
+  margin: 0 0 0 14px;
+  color: black;
+}
+
+@media screen and (max-width: 768px) {
+  .search-bar {
+    margin: 0 30px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .search-bar {
+    margin: 0 14px;
+  }
+}

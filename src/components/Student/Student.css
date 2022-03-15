@@ -1,0 +1,223 @@
+.student {
+    margin: 0 70px 125px;
+    color: black;
+  }
+  
+  .student__heading {
+    padding: 110px 0 23px;
+    max-width: 100%;
+    border-bottom: 1px solid #dadada;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  
+  .student__info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 66px 0 101px;
+  }
+  
+  .sudent__personal-info {
+    max-width: 600px;
+  }
+  
+  .student__title {
+    font-weight: normal;
+    font-size: 50px;
+    line-height: 58px;
+    letter-spacing: -0.04em;
+    margin: 0 0 18px;
+  }
+  
+  .student__subtitle {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    margin: 0;
+  }
+  
+  .student__main-text {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    margin: 26px 0 99px;
+  }
+  
+  .student__social-links {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+  }
+  
+  .student__social-link-item {
+    margin: 0 20px 0 0;
+  }
+  
+  .student__social-link-item:last-of-type {
+    margin: 0;
+  }
+  
+  .student__social-link {
+    color: black;
+    text-decoration: none;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    transition: 0.2s;
+  }
+  
+  .student__social-link:hover {
+    opacity: 0.7;
+  }
+  
+  .student__image {
+    border-radius: 10px;
+    height: 100%;
+    margin: 0 0 0 40px;
+  }
+  
+  .student__sub-heading {
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 20px;
+    color: #8b8b8b;
+    margin: 0 0 50px;
+  }
+  
+  /* Portfolio */
+  
+  .portfolio {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .portfolio__list-item {
+    width: 100%;
+    color: black;
+  }
+  
+  .portfolio__list-item:nth-of-type(2) {
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+  }
+  
+  .portfolio__link {
+    display: flex;
+    color: black;
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 50px;
+    letter-spacing: -0.04em;
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+    background-image: url("../../images/svg/portfolio-arrow.svg");
+    background-repeat: no-repeat;
+    background-position-x: right;
+    background-position-y: center;
+    transition: 0.2s;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .student {
+      margin: 0 50px 125px;
+    }
+  
+    .sudent__personal-info {
+      max-width: 364px;
+    }
+  
+    .student__title {
+      font-size: 40px;
+      line-height: 40px;
+      margin: 0 0 16px;
+    }
+    
+    .student__subtitle {
+      font-size: 12px;
+      line-height: 18px;
+    }
+    
+    .student__main-text {
+      font-size: 12px;
+      line-height: 18px;
+      margin: 20px 0 87px;
+    }
+  
+    .student__image {
+      max-width: 255px;
+      margin: 0 0 0 20px;
+    }
+  
+    .student__social-link {
+      font-size: 14px;
+      line-height: 17px;
+    }
+  
+    .portfolio__link {
+      font-size: 28px;
+      line-height: 50px;
+    }
+  }
+  
+  @media screen and (max-width: 550px) {
+    .student {
+      margin: 0 18px 125px;
+    }
+  
+    .student__heading {
+      padding: 70px 0 23px;
+    }
+  
+    .student__info-container {
+      flex-direction: column-reverse;
+      margin: 60px 0 70px;
+    }
+  
+    .student__image {
+      max-width: 364px;
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+  
+    .student__title {
+      font-size: 30px;
+      line-height: 36px;
+    }
+    
+    .student__subtitle {
+      font-size: 11px;
+      line-height: 16px;
+    }
+    
+    .student__main-text {
+      font-size: 11px;
+      line-height: 16px;
+      margin: 20px 0 40px;
+    }
+  
+    .student__sub-heading {
+      margin: 0 0 40px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  
+    .portfolio {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .portfolio__link {
+      font-size: 18px;
+      line-height: 28px;
+      background-size: 15px 25px;
+    }
+  }
