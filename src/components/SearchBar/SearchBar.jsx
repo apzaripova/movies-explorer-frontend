@@ -95,7 +95,7 @@ function SearchBar(props) {
         <button type="submit" 
           className={`search-bar__submit ${!isMovieValid ? 'search-bar__submit_disabled': ''}`}
           disabled={!isMovieValid}>
-          Поиск</button>
+          </button>
       </form>
     </section>
   );
