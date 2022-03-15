@@ -32,7 +32,7 @@ function Header(props) {
           <Link to="/sign-in" className="header__link header__link_outlined">Войти</Link>
         </div>
         <div className={`${props.loggedIn ? 'header__link-container' : 'hidden'}`}>
-          <NavLink to="/mmovies" className="header__link header__link_state_logged-in">Фильмы</NavLink>
+          <NavLink to="/movies" className="header__link header__link_state_logged-in">Фильмы</NavLink>
           <NavLink to="/saved-movies" className="header__link header__link_state_logged-in">Сохраненные фильмы</NavLink>
           <NavLink to="/profile" className="header__link-box">
             Аккаунт
