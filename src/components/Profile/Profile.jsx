@@ -123,5 +123,5 @@ function Profile(props) {
     </section>
   );
 }
-
-export default Profile;
+  
+  export default Profile;

@@ -1,6 +1,8 @@
 export const MOVIES_URL = 'https://api.nomoreparties.co';
 export const BASE_URL = 'https://movies-explorer.azaripova.nomoredomains.rocks';
 
+
+
 export const DEFAULT_DATA = {
     country: 'country N/A',
     director: 'director N/A',

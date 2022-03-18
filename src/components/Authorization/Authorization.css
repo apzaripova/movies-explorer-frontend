@@ -41,7 +41,7 @@
   }
   
   .auth__input {
-    color: white;
+    color: black;
     display: flex;
     max-width: 370px;
     width: 100%;
