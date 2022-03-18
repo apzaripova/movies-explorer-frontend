@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 import { mainApi } from '../../utils/MainApi';
 import { moviesApi } from '../../utils/MoviesApi';
 import useWindowSize from '../../utils/useWindowSize';
@@ -7,13 +7,14 @@ import ProtectedRoute from '../../utils/ProtectedRoute';
 import * as auth from '../../utils/Auth';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-import RouteComposer from '../RouteComposer/RouteComposer';
-import RouteProfile from '../RouteProfile/RouteProfile';
-import Landing from '../Landing/Landing';
+import Main from '../Main/Main';
+import Movies from "../Movies/Movies";
+import SavedMovies from '../SavedMovies/SavedMovies';
+import Profile from '../Profile/Profile';
 
 import Authorization from '../Authorization/Authorization';
 import Preloader from '../Preloader/Preloader';
-import Popup from '../Popup/Popup';
+import PopupMenu from '../PopupMenu/PopupMenu';
 import NotFound from '../NotFound/NotFound';
 
 import { 
@@ -31,6 +32,8 @@ function App() {
   const [ isLoggedIn, setLoggedIn ] = React.useState(false);
   const [ currentUser, setCurrentUser ] = React.useState({});
   const [ permissionsChecked, setPermissionsChecked ] = React.useState(false);
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false);
+  const [ message, setMessage ] = useState("");
 
   const [ isTooltipPopupOpened, setTooltipPopupOpened ] = React.useState(false);
   const [ isActionSuccessful, setActionSuccessful ] = React.useState(false);
@@ -228,29 +231,29 @@ function App() {
     return null;
   }
 
+  function handleMenu() {
+    setIsMenuOpen(!isMenuOpen);
+  }
+
+  function closeMenu() {
+    setIsMenuOpen();
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="content">
-          <Preloader 
-            isPageLoading={isPageLoading}
-          />
-          <Popup 
-            isOpen={isTooltipPopupOpened}
-            isActionSuccessful={isActionSuccessful}
-            onClose={closeTooltipPopup}
-          />
           <Switch>
-            <Route exact path="/">
-              <Landing
-                loggedIn={isLoggedIn}
-              />
-            </Route>
-            <ProtectedRoute path="/movies"
-              component={RouteComposer}
+          <Route exact path="/">
+            <Main loggedIn={isLoggedIn} onMenu={handleMenu} />
+          </Route>
+            <Route path="/movies">
+              <Movies
+              component={Movies}
               loggedIn={isLoggedIn}
 
               movies={movies}
+              onMenu={handleMenu}
               filteredMovies={filteredMovies}
 
               updateFilteredMovies={updateFilteredMovies}
@@ -261,12 +264,15 @@ function App() {
 
               saveMovie={handleSaveMovie}
               deleteMovie={handleRemoveSavedMovie}
-            />
-            <ProtectedRoute path="/saved-movies"
-              component={RouteComposer}
+              />
+              </Route>
+            <Route path="/saved-movies">
+              <SavedMovies 
+              component={SavedMovies}
               loggedIn={isLoggedIn}
 
               movies={savedMovies}
+              onMenu={handleMenu}
               filteredMovies={filteredSavedMovies}
 
               updateFilteredMovies={updateFilteredSavedMovies}
@@ -276,14 +282,19 @@ function App() {
               windowWidth={windowWidth}
 
               deleteMovie={handleRemoveSavedMovie}
-            />
-            <ProtectedRoute path="/profile" 
-              component={RouteProfile}
-              loggedIn={isLoggedIn}
-
-              onSubmit={handleUpdateUser}
-              signOut={signOut}
-            />
+              />
+              </Route>
+            <Route path="/profile">
+              <Profile
+                path="/profile"
+                component={Profile}
+                onMenu={handleMenu}
+                loggedIn={isLoggedIn}
+                onSignOut={signOut}
+                onEditUser={handleUpdateUser}
+                message={message}
+              />
+              </Route>
             <Route path="/movies">
               {isLoggedIn ? <Redirect to="/movies" /> : <Redirect to="/" />}
             </Route>
@@ -315,6 +326,7 @@ function App() {
               <NotFound />
             </Route>
           </Switch>
+          <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
         </div>
       </div>
     </CurrentUserContext.Provider>

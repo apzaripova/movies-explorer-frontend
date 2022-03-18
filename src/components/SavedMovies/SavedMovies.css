@@ -1,0 +1,17 @@
+.saved-movies {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .movies-message {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    margin: 0 auto 20px;
+    text-align: center;
+      flex: auto;
+  }

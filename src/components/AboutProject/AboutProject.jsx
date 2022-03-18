@@ -1,4 +1,4 @@
-function About() {
+function AboutPoject() {
     return (
       <section className="about">
         <h2 className="about__heading">О проекте</h2>
@@ -30,4 +30,4 @@ function About() {
     );
   }
   
-  export default About;
+  export default AboutPoject;

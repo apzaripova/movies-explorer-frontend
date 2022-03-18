@@ -1,6 +1,6 @@
 import student from '../../images/jpg/student-picture.jpg';
 
-function Student() {
+function AboutMe() {
   return (
     <section className="student">
       <h2 className="student__heading">Студент</h2>
@@ -40,4 +40,4 @@ function Student() {
   );
 }
 
-export default Student;
+export default AboutMe;

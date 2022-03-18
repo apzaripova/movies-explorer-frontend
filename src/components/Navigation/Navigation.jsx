@@ -1,18 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+import "./Navigation.css";
 
-function Navigation() {
+function Navigation(props) {
   return (
-    <section className="navigation">
-      <div className="navigation__heading-container">
-        <h1 className="navigation__heading">Учебный проект студента факультета Веб-разработки.</h1>
-      </div>
-      <nav className="navigation__nav-box">
-        <Link to={'1'} className="navigation__nav-link">О проекте</Link>
-        <Link to={'1'} className="navigation__nav-link">Технологии</Link>
-        <Link to={'1'} className="navigation__nav-link">Студент</Link>
+    <>
+      <nav className="header-nav">
+        <NavLink to="/">
+          <div className="header__logo" />
+        </NavLink>
+        <NavLink
+          to="/movies"
+          className="header-nav__movies"
+          activeClassName="header-nav__movies_active"
+        >
+          Фильмы
+        </NavLink>
+        <NavLink
+          to="/saved-movies"
+          className="header-nav__saved-movies"
+          activeClassName="header-nav__movies_active"
+        >
+          Сохраненные фильмы
+        </NavLink>
       </nav>
-    </section>
+      <div className="header-auth">
+        <Link to="/profile">
+          <div className="header__profile" />
+        </Link>
+        <div className="header__menu" onClick={props.onClick} />
+      </div>
+    </>
   );
 }
 

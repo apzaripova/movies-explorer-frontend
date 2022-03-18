@@ -1,127 +1,139 @@
-import React from 'react';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext.jsx';
-import * as CONSTANTS from '../../utils/constants';
+import React, { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import "./Profile.css";
+import Header from "../Header/Header";
+import Navigation from "../Navigation/Navigation";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
 function Profile(props) {
+  const currentUser = useContext(CurrentUserContext);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [changedName, setChangedName] = useState(false);
+  const [changedEmail, setChangedEmail] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [isInputDisabled, setIsInputDisabled] = useState(true);
+  const [formValid, setFormValid] = useState(false);
 
-  const currentUser = React.useContext(CurrentUserContext);
-
-  const [ name, setName ] = React.useState('');
-  const [ email, setEmail ] = React.useState('');
-
-  const [ nameValid, setNameValid ] = React.useState(false);
-  const [ emailValid, setEmailValid ] = React.useState(false);
-
-  const [ submitDisabled, setSubmitDisabled ] = React.useState(true);
-  const [ isTooltipVisible, setTooltipVisible ] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!currentUser.name || !currentUser.email) {
-      currentUser.name = 'загрузка данных...';
-      currentUser.email = 'загрузка данных...';
+  useEffect(() => {
+    if (currentUser.name !== undefined) {
+      setName(currentUser.name);
+      setEmail(currentUser.email);
     }
+  }, [currentUser]);
+
+  function handleNameChange(e) {
+    setChangedName(true);
+    const validName = /^[a-zA-Z- ]+$/.test(e.target.value);
+
+    if (e.target.value.length < 2) {
+      setNameError("Длина имени должна быть не менее 2 символов");
+    } else if (e.target.value.length > 30) {
+      setNameError("Длина имени должна должна быть не более 30 символов");
+    } else if (!validName) {
+      setNameError("Имя должно быть указано латиницей");
+    } else {
+      setNameError("");
+    }
+    setName(e.target.value);
+  }
+
+  function handleEmailChange(e) {
+    setChangedEmail(true);
+    const validEmail = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(
+      e.target.value
+    );
+
+    if (!validEmail) {
+      setEmailError("Неверный формат почты");
+    } else {
+      setEmailError("");
+    }
+    setEmail(e.target.value);
+  }
+
+  function changeInputDisabled() {
+    setIsInputDisabled(!isInputDisabled);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    props.onEditUser({
+      name,
+      email,
+    });
+    changeInputDisabled();
+  }
+
+  useEffect(() => {
     setName(currentUser.name);
     setEmail(currentUser.email);
   }, [currentUser]);
 
-  function toggletooltip() {
-    if(!nameValid || !emailValid) {
-      setTooltipVisible(true);
+  useEffect(() => {
+    if (nameError || emailError) {
+      setFormValid(false);
     } else {
-      setTooltipVisible(false);
+      setFormValid(true);
     }
-  }
+  }, [nameError, emailError]);
 
-  React.useEffect(() => {
-    if (nameValid && emailValid) {
-      setSubmitDisabled(false);
-    } else if (name === currentUser.name && email === currentUser.email) {
-      setSubmitDisabled(true);
+  useEffect(() => {
+    if (currentUser.name === name && currentUser.email === email) {
+      setFormValid(false);
     } else {
-      setSubmitDisabled(true);
-    } 
-    return submitDisabled;
-  }, [name, email, currentUser.name, currentUser.email, emailValid, nameValid, submitDisabled]);
-
-  const nameHandler = (evt) => {
-    setName(evt.target.value);
-    const re = CONSTANTS.NAME_REGEX;
-    if (!re.test(String(evt.target.value).toLowerCase()) && evt.target.value.length >= 1) {
-      setNameValid(false);
-    } else if (evt.target.value === '') {
-      setNameValid(false);
-    } else {
-      setNameValid(true);
+      setFormValid(true);
     }
-  };
-
-  const emailHandler = (evt) => {
-    setEmail(evt.target.value);
-    const re = CONSTANTS.MAIL_REGEX;
-    if (!re.test(String(evt.target.value).toLowerCase()) && evt.target.value.length >= 1) {
-      setEmailValid(false);
-    } else if (evt.target.value === '') {
-      setEmailValid(false);
-    } else {
-      setEmailValid(true);
-    }
-  };
-
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    props.onSubmit({name, email});
-  };
-
+  }, [name, email, currentUser.name, currentUser.email]);
   return (
-    <section className="profile">
-      <div className={`tooltip ${!isTooltipVisible ? 'hidden' : ''}`}>
-        <ul className="tooltip__list">
-          <li className="tooltip__list-item">Данные должны отличаться от текущих;</li>
-          <li className="tooltip__list-item">Имя должно включать только русские / английские буквы, пробел, либо дефис;</li>
-          <li className="tooltip__list-item">Email должен соответсвовать конструкции: example@example.com</li>
-        </ul>
-      </div>
-      <h2 className="profile__greeting">Привет, {currentUser.name || 'Username'}!</h2>
-      <form className="profile__form" 
-        onSubmit={evt => handleSubmit(evt)}
-        onChange={toggletooltip}
-      >
-        <div className="profile__data-container">
-          <label className="profile__text">
-            Имя
-          </label>
-          <input 
-            type="text"
-            className={`profile__input ${!nameValid ? 'profile__input-error' : ''}`}
-            placeholder={currentUser.name || 'Username'}
-            name="name"
-            value={name}
-            onChange={evt => nameHandler(evt)}
-          />
-        </div>
-        <div className="profile__data-container">
-          <label className="profile__text">
-            Email
-          </label>
-          <input 
-            type="email" 
-            className={`profile__input ${!emailValid ? 'profile__input-error' : ''}`}
-            placeholder={currentUser.email || 'Email'}
-            name="email"
-            value={email}
-            onChange={evt => emailHandler(evt)}
-          />
-        </div>
-        <button type="submit"
-          className={`profile__button ${submitDisabled ? 'profile__button_disabled' : ''}`}
-          disabled={submitDisabled}
-        >Редактировать</button>
-      </form>
-      <button type="button" className="profile__button profile__button_type_signout" 
-        onClick={props.signOut}
-      >Выйти из аккаунта</button>
-    </section>
+    <>
+      <Header className="header header__white">
+        <Navigation onClick={props.onMenu} />
+      </Header>
+      <section className="profile">
+        <h2 className="form__heading-profile">{`Привет, ${currentUser.name}!`}</h2>
+        <form className="form__profile" id="profile" onSubmit={handleSubmit}>
+              <div className="profile__field">
+                <label className="profile__text profile__text_subtitle">
+                  Имя
+                  <input
+                    id="profile-name"
+                    className="profile__text profile__input"
+                    type="text"
+                    value={name}
+                    onChange={handleNameChange}
+                    disabled={!isInputDisabled}
+                  />
+                </label>
+                <span className="form__item-profile_error form__profile_span">
+                {nameError}
+              </span>
+              </div>
+              <div className="profile__field form__input-container_border">
+                <label className="profile__text profile__text_subtitle">
+                  Почта
+                  <input
+                    id="profile-email"
+                    className="profile__text profile__input"
+                    type="text"
+                    value={email}
+                    onChange={handleEmailChange}
+                    disabled={!isInputDisabled}
+                  />
+                </label>
+              </div>
+              <span className="form__item-profile_error">{emailError}</span>
+              <button type="submit" className="profile__button" disabled={!formValid || name < 2 || email < 2}>
+                Редактировать
+               </button>
+              <button className="profile__button profile__button_styled" type="button" onClick={props.onSignOut}>
+                  Выйти из аккаунта
+              </button>
+        </form>
+      </section>
+    </>
   );
 }
-  
-  export default Profile;
+
+export default Profile;

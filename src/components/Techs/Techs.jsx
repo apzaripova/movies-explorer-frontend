@@ -1,4 +1,4 @@
-function Technologies() {
+function Techs() {
     return (
       <section className="technologies">
         <h2 className="technologies__heading">Технологии</h2>
@@ -19,4 +19,4 @@ function Technologies() {
     );
   }
   
-  export default Technologies;
+  export default Techs;
