@@ -1,4 +1,4 @@
-import { AUTH } from "../utils/constants";
+import { AUTH } from "./constants";
 
 const BASE_URL = AUTH;
 const headers = {

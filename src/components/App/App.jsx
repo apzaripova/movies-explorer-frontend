@@ -5,7 +5,7 @@ import "./App.css";
 import ProtectedRoute from '../../utils/ProtectedRoute';
 import * as moviesApi from "../../utils/MoviesApi";
 import mainApi from "../../utils/MainApi";
-import * as auth from "../../utils/auth";
+import * as auth from "../../utils/Auth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { MAX_SHORT_MOVIE_DORATION } from "../../utils/constants";
 
