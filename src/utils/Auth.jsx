@@ -1,47 +1,58 @@
-import * as CONSTANTS from './constants';
-const BASE_URL = CONSTANTS.BASE_URL;
+import { AUTH } from "../utils/constants";
 
-function handleRes(res) {
+const BASE_URL = AUTH;
+const headers = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+};
+
+const getResponse = (res) => {
   if (res.ok) {
     return res.json();
-  } else {
-    return Promise.reject(res.status + ": " + res.statusText)
   }
-}
+  return Promise.reject(res.status);
+};
 
-export const signUp = (name, email, password) => {
+export const register = (name, email, password) => {
   return fetch(`${BASE_URL}/signup`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, email, password })
-  })
-    .then(handleRes)
-}
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+    }),
+  }).then((res) => {
+    return getResponse(res);
+  });
+};
 
-export const signIn = (email, password) => {
+export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      password,
+      email,
+    }),
   })
-    .then(handleRes)
-}
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.token) {
+        localStorage.setItem("jwt", data.token);
+        return data;
+      }
+    });
+};
 
-export const checkTokenValidity = (jwt) => {
+export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      "Authorization": `Bearer ${jwt}`,
-    }
-  })
-    .then(handleRes)
-}
+      headers,
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => {
+    return getResponse(res);
+  });
+};

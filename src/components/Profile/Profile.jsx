@@ -105,10 +105,10 @@ function Profile(props) {
                     onChange={handleNameChange}
                     disabled={!isInputDisabled}
                   />
-                <span className="form__item-profile_error form__profile_span">
+              </div>
+              <span className="form__item-profile_error form__profile_span">
                 {nameError}
               </span>
-              </div>
               <div className="profile__field form__input-container_border">
                 <label className="profile__text profile__text_subtitle">
                   Почта</label>

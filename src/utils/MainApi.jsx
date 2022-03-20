@@ -1,88 +1,91 @@
-import * as CONSTANTS from './constants';
+import { MAIN_API } from "../utils/constants";
 
 class MainApi {
-  constructor({ url }) {
-    this._url = url;
-    let jwt = localStorage.getItem('jwt');
-    this._token = jwt;
+  constructor(options) {
+    this._url = options.url;
+    this._headers = options.headers;
   }
 
-  handleResponse(res) {
-    if (!res.ok) {
-      return Promise.reject(`Ошибка: ${res.status} - ${res.statusText}`);
-    }
-    return res.json();
+  _getResponse(res) {
+    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getUserInfo() {
-    return fetch(`${this._url}/users/me`,
-      {
-        headers: {
-          "Authorization": `Bearer ${this._token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      .then((res) =>
-        this.handleResponse(res)
-      )
-  }
-
-  setUserInfo(data) {
-    return fetch(`${this._url}/users/me`,
-      {
-        method: 'PATCH',
-        headers: {
-          "Authorization": `Bearer ${this._token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then((res) =>
-        this.handleResponse(res)
-      )
-  }
-
-  getSavedMovies() {
-    return fetch(`${this._url}/movies`, {
+  getUserData(jwt) {
+    return fetch(`${this._url}${"users"}/${"me"}`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${this._token}`,
-        'Content-Type': 'application/json'
+        authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-    })
-    .then((res) =>
-        this.handleResponse(res)
-    )
-  };
-
-  saveMovie(movie) {
-    return fetch(`${this._url}/movies`, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${this._token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(movie),
-    })
-    .then((res) =>
-      this.handleResponse(res)
-    )
+    }).then(this._getResponse);
   }
 
-  removeSavedMovie(movieId) {
-    return fetch(`${this._url}/movies/${movieId}`, {
+  editUserInfo(newData) {
+    return fetch(`${this._url}users/me`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({
+        name: newData.name,
+        email: newData.email,
+      }),
+    }).then(this._getResponse);
+  }
+
+  getUserMovies(jwt) {
+    return fetch(`${this._url}${"movies"}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }).then(this._getResponse);
+  }
+
+  addMovie(movie, jwt) {
+    return fetch(`${this._url}${"movies"}`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: movie.image,
+        trailer: movie.trailer,
+        thumbnail: movie.thumbnail,
+        movieId: movie.movieId,
+        nameRU: movie.nameRU,
+        nameEN: movie.nameEN,
+      }),
+    }).then(this._getResponse);
+  }
+
+  deleteMovie(id, jwt) {
+    return fetch(`${this._url}${"movies"}/${id}`, {
       method: "DELETE",
       headers: {
-        "Authorization": `Bearer ${this._token}`,
-        'Content-Type': 'application/json'
+        authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-    })
-    .then((res) =>
-      this.handleResponse(res)
-    )
+    }).then(this._getResponse);
   }
 }
 
-export const mainApi = new MainApi({
-  url: CONSTANTS.BASE_URL
+const mainApi = new MainApi({
+  url: MAIN_API,
+  headers: {
+    authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
+
+export default mainApi;
