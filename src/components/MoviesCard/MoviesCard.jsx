@@ -1,104 +1,72 @@
-import React from 'react';
-import movie_pic from '../../images/jpg/movie-picture.jpg';
-import * as CONSTANTS from '../../utils/constants';
+import React from "react";
+import { baseUrl } from "../../utils/constants";
 
-function MoviesCards(props) {
+function MoviesCard(props) {
+  const isLiked = !props.isSavedMovies && props.likedMovies(props.movie);
 
-  const cardData = props.card;
-  const MOVIES_URL = CONSTANTS.MOVIES_URL;
-  const [isSaved, setIsSaved ] = React.useState(false);
-
-  React.useEffect(() => {
-    setInitialLikes();
-  }, []);
-
-  function setInitialLikes() {
-    const processedCard = props.savedMoviesArray.find((card) => returnSavedMovie(card));
-    if (processedCard) {
-      setIsSaved(true);
-    } else {
-      setIsSaved(false);
-    }
+  function handleLikeClick() {
+    props.onAddMovie({
+      country: props.movie.country,
+      director: props.movie.director,
+      duration: props.movie.duration,
+      year: props.movie.year,
+      description: props.movie.description,
+      image: `${baseUrl}${props.movie.image ? props.movie.image.url : ""}`,
+      trailer: props.movie.trailerLink,
+      thumbnail: `${baseUrl}${
+        props.movie.image.formats.thumbnail
+          ? props.movie.image.formats.thumbnail.url
+          : ""
+      }`,
+      movieId: props.movie.id,
+      nameRU: props.movie.nameRU,
+      nameEN: props.movie.nameEN,
+      isSaved: props.movie.isSaved,
+    });
   }
 
-  function returnSavedMovie(card) {
-    return card.movieId === cardData.id;
-  }
-
-  function convertTime(mins) {
-    const hours = Math.trunc(mins/60);
-	  const minutes = mins % 60;
-	  return hours > 0 ? `${hours}ч ${minutes}м` : `${minutes}м`;
-  };
-
-  function saveMovie(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    setIsSaved(true);
-    const movieProps = {
-      country: cardData.country || CONSTANTS.DEFAULT_DATA.country,
-      director: cardData.director  || CONSTANTS.DEFAULT_DATA.director,
-      duration: cardData.duration  || CONSTANTS.DEFAULT_DATA.duration,
-      year: cardData.year  || CONSTANTS.DEFAULT_DATA.year,
-      description: cardData.description  || CONSTANTS.DEFAULT_DATA.description,
-      image: `${MOVIES_URL}${cardData.image.url}` || movie_pic,
-      trailer: cardData.trailerLink || CONSTANTS.DEFAULT_DATA.trailer,
-      thumbnail: `${MOVIES_URL}${cardData.image.formats.thumbnail.url}` || movie_pic,
-      movieId: cardData.id,
-      nameRU: cardData.nameRU || CONSTANTS.DEFAULT_DATA.nameRU,
-      nameEN: cardData.nameEN || CONSTANTS.DEFAULT_DATA.nameEN,
-    };
-    props.saveMovie(movieProps);
-  }
-
-  function styleAdjustments() {
-    if (!props.savedMovies) {
-      return `${MOVIES_URL}${cardData.image.url}`
-    } else {
-      return cardData.image
-    }
-  }
-
-  function deleteMovie(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    if (!props.savedMovies) {
-      const processedCard = props.savedMoviesArray.find((card) => returnSavedMovie(card));
-      props.deleteMovie(processedCard._id);
-      setIsSaved(false);
-    } else {
-      props.deleteMovie(cardData._id);
-      setIsSaved(false);
-    }
+  function handleDeleteClick() {
+    props.onDelete(props.movie);
   }
 
   return (
-    <li className="card">
-      <a href={cardData.trailerLink} target="_blank" rel="noreferrer" className="card__trailer-link">
-        <img src={`${cardData.image !== null
-                    ? styleAdjustments()
-                    : movie_pic
-                  }`} 
-            alt={cardData.nameRU} 
-            className="card__image" 
+    <div className="card">
+      <div className="card__description">
+        <ul className="card__description-container">
+          <li className="card__title">{props.name || props.movie.nameRU}</li>
+          <li className="card__duration">{`${Math.floor(
+            (props.duration || props.movie.duration) / 60
+          )}ч ${(props.duration || props.movie.duration) % 60}м`}</li>
+        </ul>
+        {props.isSavedMovies ? (
+          <div className="card__delete" onClick={handleDeleteClick} />
+        ) : (
+          <div
+            className={`card__like ${isLiked ? "card__like_active" : ""}`}
+            onClick={handleLikeClick}
           />
-        <div className="card__info-box">
-          <div className="card__text-container">
-            <p className="card__title">{cardData.nameRU}</p>
-            <p className="card__length-info">{convertTime(cardData.duration)}</p>
-          </div>
-          <button type="button" 
-            className={`card__button ${props.savedMovies ? 'hidden' : isSaved ? 'card__button_state_saved': ''}`} 
-            onClick={!isSaved ? evt => saveMovie(evt) : evt => deleteMovie(evt)} 
-          />
-          <button type="button" 
-            className={`card__button card__button_state_cancel ${props.savedMovies ? '' : 'hidden'}`}
-            onClick={evt => deleteMovie(evt)}
-          />
-        </div>
+        )}
+      </div>
+      <a
+        href={props.trailerLink || props.trailer}
+        target="_blank"
+        rel="noopener noreferrer nofollow
+  "
+      >
+        <img
+          className="card__img"
+          alt={props.name}
+          src={
+            props.isSavedMovies
+              ? props.movie.image
+              : `${baseUrl}${
+                  props.movie.image ? props.movie.image.url : props.image
+                }`
+          }
+        />
       </a>
-    </li>
+    </div>
   );
 }
 
-export default MoviesCards;
+export default MoviesCard;

@@ -1,6 +1,8 @@
 export const MOVIES_URL = 'https://api.nomoreparties.co';
 export const BASE_URL = 'https://movies-explorer.azaripova.nomoredomains.rocks';
 
+export const baseUrl = "https://api.nomoreparties.co";
+
 export const MIN_NUMBER_OF_CARDS = 4;
 export const MAX_NUMBER_OF_CARDS = 100;
 
