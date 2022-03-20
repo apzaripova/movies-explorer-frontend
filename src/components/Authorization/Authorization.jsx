@@ -109,7 +109,7 @@ function Authorization(props) {
       <form className="auth__form" 
           onChange={props.signIn ? submitLoginHandler : submitRegistrationHandler} 
           onSubmit={props.signIn ? handleLogin : handleRegistration}>
-        <label className={`${props.signIn ? 'hidden' : 'auth__field'}`}>Имя</label>
+        <label className={`${props.signIn ? 'hidden' : 'auth__field'}`}>Имя
           <input 
             maxLength="30" type="text"
             className={`auth__input ${nameValid ? '' : 'auth__input_error'}`} 
@@ -119,7 +119,8 @@ function Authorization(props) {
             disabled={props.signIn}
           />
           <span className={`${nameError ? 'auth__error' : ''}`}>{nameError}</span>
-        <label className="auth__field">E-mail</label>
+        </label>
+        <label className="auth__field">E-mail
           <input 
             minLength="2" 
             maxLength="30" type="text"
@@ -129,6 +130,7 @@ function Authorization(props) {
             value={email}
           />
           <span className={`${emailError ? 'auth__error' : ''}`}>{emailError}</span>
+        </label>
         <label className="auth__field">Пароль
           <input 
             minLength="8" 

@@ -96,7 +96,7 @@ function Profile(props) {
         <form className="form__profile" id="profile" onSubmit={handleSubmit}>
               <div className="profile__field">
                 <label className="profile__text profile__text_subtitle">
-                  Имя
+                  Имя</label>
                   <input
                     id="profile-name"
                     className="profile__text profile__input"
@@ -105,14 +105,13 @@ function Profile(props) {
                     onChange={handleNameChange}
                     disabled={!isInputDisabled}
                   />
-                </label>
                 <span className="form__item-profile_error form__profile_span">
                 {nameError}
               </span>
               </div>
               <div className="profile__field form__input-container_border">
                 <label className="profile__text profile__text_subtitle">
-                  Почта
+                  Почта</label>
                   <input
                     id="profile-email"
                     className="profile__text profile__input"
@@ -121,7 +120,6 @@ function Profile(props) {
                     onChange={handleEmailChange}
                     disabled={!isInputDisabled}
                   />
-                </label>
               </div>
               <span className="form__item-profile_error">{emailError}</span>
               <button type="submit" className="profile__button" disabled={!formValid || name < 2 || email < 2}>
