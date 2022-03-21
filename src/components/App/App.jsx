@@ -15,7 +15,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 
 import Authorization from '../Authorization/Authorization';
-import Preloader from '../Preloader/Preloader';
+import ModalWindow from "../ModalWindow/ModalWindow";
 import PopupMenu from '../PopupMenu/PopupMenu';
 import NotFound from '../NotFound/NotFound';
 
@@ -30,6 +30,7 @@ function App() {
   const [shortMovies, setShortMovies] = useState(false);
   const [message, setMessage] = useState("");
   const [moviesMessage, setMoviesMessage] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState({ visible: false });
   const history = useHistory();
   let location = useLocation();
 
@@ -144,6 +145,10 @@ function App() {
   function closeMenu() {
     setIsMenuOpen();
   }
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
 
   function handleGetMovies(keyword) {
     setMoviesMessage("");
@@ -311,7 +316,8 @@ function App() {
           <Route exact path="/">
             <Main loggedIn={loggedIn} onMenu={handleMenu} />
           </Route>
-          <ProtectedRoute
+          <Route>
+            <Movies
             path="/movies"
             component={Movies}
             onMenu={handleMenu}
@@ -325,7 +331,7 @@ function App() {
             savedMovies={userMovies}
             onSignOut={handleSignOut}
             likedMovies={checkSavedMovie}
-          />
+          /></Route>
           <ProtectedRoute
             path="/saved-movies"
             component={SavedMovies}
@@ -378,6 +384,7 @@ function App() {
             </Route>
           </Switch>
           <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
+          <ModalWindow onOpen={isModalVisible} onClose={handleModalClose} />
         </div>
       </div>
     </CurrentUserContext.Provider>
