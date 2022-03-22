@@ -1,4 +1,4 @@
-.popup {
+.infotooltip{
   position: fixed;
   display: flex;
   top: 0;
@@ -14,13 +14,13 @@
   transition: visibility 0.6s, opacity 0.6s;
 }
 
-.popup_opened {
+.infotooltip_opened {
   visibility: visible;
   opacity: 1;
   z-index: 10;
 }
 
-.popup__container {
+.infotooltip__container {
   background-color: #fff;
   max-width: 300px;
   width: 100%;
@@ -31,21 +31,21 @@
   position: relative;
 }
 
-.popup__info {
+.infotooltip__info {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
 }
 
-.popup__info-status {
+.infotooltip__info-status {
   width: 120px;
   height: 120px;
   padding-top: 24px;
   margin-bottom: 32px;
 }
 
-.popup__title {
+.infotooltip__title {
   font-size: 24px;
   line-height: 1.196;
   font-weight: 900;
@@ -55,13 +55,22 @@
 
 .button_type_close-popup {
   background-image: url('../../images/svg/close_icon.svg');
+  background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  border: none;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 @media screen and (max-width: 1023px) {
 
-  .popup__info-status {
+  .infotooltip__info-status {
     width: 100px;
     height: 100px;
   } 
@@ -70,18 +79,18 @@
 
 @media screen and (max-width: 767px) {
   
-  .popup__title {
+  .infotooltip__title {
       font-size: 18px;
       margin: 0 0 75px;
   }
 
-  .popup__container {
+  .infotooltip__container {
     width: calc(100% - 19px*2);
     margin: 0 auto;
     padding: 25px 22px;
   }
 
-  .popup__info-status {
+  .infotooltip__info-status {
     width: 80px;
     height: 80px;
   }
@@ -90,7 +99,7 @@
 
 @media screen and (max-width: 425px) {
   
-  .popup__info-status {
+  .infotooltip__info-status {
     width: 60px;
     height: 60px;
   }

@@ -37,65 +37,61 @@ function App() {
   const [userMovies, setUserMovies] = React.useState([]);
   const [sortedMovies, setSortedMovies] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [shortMovies, setShortMovies] = useState(false);
   const [message, setMessage] = useState("");
-  const [moviesMessage, setMoviesMessage] = useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
   let location = useLocation();
 
-  const handleError = (err) => console.error(err);
 
-  useEffect(() => {
-    const path = location.pathname;
-    const jwt = localStorage.getItem("jwt");
-    if (jwt !== null) {
-      auth
-        .getContent(jwt)
-        .then((res) => {
+  React.useEffect(() => {
+    if (localStorage.getItem('jwt')) {
+      let jwt = localStorage.getItem('jwt');
+      auth.getContent(jwt)
+      .then((res) => {
           if (res) {
-            setLoggedIn(true);
-            getCurrentUser();
-            setCurrentUser(res);
-            history.push(path);
+            setLoggedIn(true)
+            setCurrentUser(res)
+            if (location.pathname === '/movies') {
+              history.push('/movies')
+            } else if (location.pathname === '/profile') {
+              history.push('/profile')
+            } else if (location.pathname === '/saved-movies') {
+              history.push('/saved-movies')
+            } else if (location.pathname === '/signin') {
+              history.push('/movies')
+            } else if (location.pathname === '/signup') {
+              history.push('/movies')
+            }  
+            return res
           }
         })
-        .catch((err) => {
-          console.log(`Переданный токен некорректен или просрочек: ${err}`);
-          localStorage.removeItem("jwt");
-          history.push("/");
-        });
+      .catch((err) => console.log(err));
     }
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [history, loggedIn, location.pathname]);
 
   function handleRegister(name, email, password) {
+    setIsLoading(true)
     auth
       .register(name, email, password)
       .then((res) => {
         if (res) {
           setIsSuccess(true)
           handleLogin(email, password);
-          setLoggedIn(true);
           setInfoTooltipActive(true)
           setIsLoading(false)
-          setCurrentUser(res);
+          return res
         }
       })
-      .catch((err) => {
-        if (err === 409) {
-          setMessage("Пользователь с таким email уже существует");
-        } else {
-          setMessage("При регистрации пользователя произошла ошибка");
-        }
-        setIsSuccess(false)
-        setIsLoading(false)
-        setInfoTooltipActive(true)
-      });
-  }
+    .catch((err) => {
+      console.log(err);
+      setIsSuccess(false)
+      setIsLoading(false)
+      setInfoTooltipActive(true)
+    });  
+  };
 
   function handleLogin(email, password) {
+    setIsLoading(true)
     auth
       .authorize(email, password)
       .then((data) => {
@@ -104,28 +100,33 @@ function App() {
           return false;
         }
         if (data.token) {
+          setLoggedIn(true)
           localStorage.setItem("jwt", data.token);
-          setMessage("");
-          setLoggedIn(true);
-          getCurrentUser();
           history.push("/movies");
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
-          return loggedIn;
+          return data;
         }
+        mainApi.getUserData()
+        .then((myData) => {
+          setIsFailed(false)
+          setCurrentUser(myData) 
+        })
+        .catch((err) => {
+          setIsFailed(true)
+          setIsLoading(false)
+          console.log(err);
+        });
       })
       .catch((err) => {
-        setMessage("При авторизации произошла ошибка");
-        if (err === 401) {
-          setMessage("Пользователь с таким email не найден");
-        }
-        if (err === 400) {
-          setMessage("Неверный email или пароль");
-        }
-        localStorage.removeItem("jwt");
-      });
-  }
+        console.log(err);
+        setLoggedIn(false)
+        setIsSuccess(false)
+        setIsLoading(false)
+        setInfoTooltipActive(true)
+      })
+    };
 
   // редактирование профиля пользователя
 
@@ -145,17 +146,10 @@ function App() {
   }
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("userMovies");
-    localStorage.removeItem("movies");
-    localStorage.removeItem("sortedMovies");
-    localStorage.removeItem("currentUser");
-    setUserMovies([]);
-    setSortedMovies([]);
-    setCurrentUser({});
+    localStorage.clear();
+    history.push('/');
     setLoggedIn(false);
-    setMessage("");
-    history.push("/");
+    setCurrentUser({});
   };
 
   function handleMenu() {
@@ -369,43 +363,51 @@ function App() {
       });
   }
 
-  useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt !== null) {
-      Promise.all([mainApi.getUserData(jwt), mainApi.getUserMovies(jwt)])
-        .then(([userData, savedMovies]) => {
-          localStorage.setItem("currentUser", JSON.stringify(userData));
-          setCurrentUser(userData);
+  // загрузка фильмов с внешнего сервера
 
-          const savedMoviesList = savedMovies.filter(
-            (item) => item.owner._id === userData._id
-          );
-          localStorage.setItem("userMovies", JSON.stringify(savedMoviesList));
-          setUserMovies(savedMoviesList);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  React.useEffect(() => {
+    let jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      setIsLoading(true)
+      moviesApi.getInitialMovies()
+      .then((movieData) => {
+        setIsFailed(false)
+        localStorage.setItem('movies',  JSON.stringify(movieData));
+        setAllMovies(movieData)
+
+        const searchedMovies = JSON.parse(localStorage.getItem('searchedMovies'));
+
+          if (searchedMovies) {
+            setSearchedMovies(searchedMovies)
+          }
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setIsFailed(true)
+        console.log(err);
+      })
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    checkSavedMovie(sortedMovies);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userMovies]);
+  // загрузка сохраненных фильмов
 
-  useEffect(() => {
-    moviesApi
-      .getInitialMovies()
-      .then((allMovies) => {
-        setMovies(allMovies);
-        localStorage.setItem("movies", JSON.stringify(allMovies));
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        localStorage.removeItem("movies");
-      });
-  }, [currentUser]);
+    React.useEffect(() => {
+      const jwt = localStorage.getItem('jwt');
+      if (jwt) {
+          mainApi.getUserMovies()
+            .then((savedMovieData) => {
+              setIsFailed(false)
+              const userSavedMovies = savedMovieData.filter((movie) => {
+                return movie.owner === currentUser._id
+              })
+              setSavedMovies(userSavedMovies)
+            })
+            .catch((err) => {
+              setIsFailed(true)
+              console.log(err);
+            });
+          }
+        }, [currentUser._id]);
 
   return (
       <CurrentUserContext.Provider value={currentUser}>
@@ -452,6 +454,7 @@ function App() {
                 linkText={'Регистрация'}
                 link={'/sign-up'}
                 handleSubmit={handleLogin}
+                isLoading={isLoading}
               />
             </Route>
             <Route path="/sign-up">
