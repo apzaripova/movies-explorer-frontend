@@ -3,37 +3,28 @@ import "./SearchForm.css";
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 function SearchForm(props) {
-  const [findedMovie, setFindedMovie] = useState("");
-  const [error, setError] = React.useState("");
-  const [formValid, setFormValid] = React.useState(false);
+  const [keyword, setKeyword] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [isFormValid, setIsFormValid] = React.useState(false);
 
-  function handleSearchMovie(e) {
-    setFindedMovie(e.target.value);
-    if (e.target.value.length === 0) {
-      setError("Нужно ввести ключевое слово");
-    } else {
-      setError("");
-    }
+  function handleChange(evt) {
+    setKeyword(evt.target.value);
+    setError(SEARCH_VALIDATE_MESSAGE);
+    setIsFormValid(evt.target.closest('form').checkValidity());
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-    props.onGetMovies(findedMovie);
-    setFindedMovie("");
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    if (isFormValid) {
+      props.onSubmit(keyword)
+    } else {
+      setError(SEARCH_VALIDATE_MESSAGE);
+    }
   }
 
   function handleChangeCheckbox() {
     props.onChangeCheckbox();
   }
-
-  React.useEffect(() => {
-    if (findedMovie && !error) {
-      setFormValid(true);
-    } else {
-      setFormValid(false);
-    }
-  }, [findedMovie, error]);
 
   return (
     <>
@@ -48,18 +39,16 @@ function SearchForm(props) {
                 placeholder="Фильм"
                 minLength="2"
                 maxLength="40"
-                value={findedMovie}
-                onChange={handleSearchMovie}
+                onChange={handleChange}
                 required
               />
             </label>
           </form>
-          <button
-            className="submit__button"
-            type="submit"
-            onClick={handleSubmit}
-            disabled={!formValid}
-          ></button>
+          <button 
+            type="submit" 
+            className={`button button_type_search ${!isFormValid ? "button_type_search_disabled" : ""}`} 
+            aria-label="search a movie">
+          </button>
         </div>
         <div className="form__item-error">{error}</div>
         <FilterCheckbox 

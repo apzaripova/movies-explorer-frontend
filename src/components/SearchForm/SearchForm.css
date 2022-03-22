@@ -35,7 +35,7 @@
 	border-bottom: 1px solid #2be080;
 }
 
-.submit__button {
+.button_type_search {
   background: url(../../images/svg/buttonSearch.svg) no-repeat right;
   width: 36px;
   height: 34px;
@@ -45,7 +45,7 @@
   transition: 0.1s linear 0.1s;
 }
 
-.submit__button:hover {
+.button_type_search:hover {
   opacity: 0.8;
   cursor: pointer;
 }
