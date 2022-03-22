@@ -9,7 +9,7 @@ function SearchForm(props) {
 
   function handleChange(evt) {
     setKeyword(evt.target.value);
-    setError(SEARCH_VALIDATE_MESSAGE);
+    setError('Введите ключевое слово');
     setIsFormValid(evt.target.closest('form').checkValidity());
   }
 
@@ -18,7 +18,7 @@ function SearchForm(props) {
     if (isFormValid) {
       props.onSubmit(keyword)
     } else {
-      setError(SEARCH_VALIDATE_MESSAGE);
+      setError('Введите ключевое слово');
     }
   }
 
