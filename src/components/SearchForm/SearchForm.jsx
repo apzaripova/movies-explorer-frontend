@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SearchForm.css";
-import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
+import FilterCheckbox from './FilterCheckbox/FilterCheckbox';
 
 function SearchForm(props) {
   const [findedMovie, setFindedMovie] = useState("");
@@ -23,6 +23,10 @@ function SearchForm(props) {
     setFindedMovie("");
   }
 
+  function handleChangeCheckbox() {
+    props.onChangeCheckbox();
+  }
+
   React.useEffect(() => {
     if (findedMovie && !error) {
       setFormValid(true);
@@ -30,10 +34,6 @@ function SearchForm(props) {
       setFormValid(false);
     }
   }, [findedMovie, error]);
-
-  function handleChangeCheckbox() {
-    props.onChangeCheckbox();
-  }
 
   return (
     <>
