@@ -381,6 +381,7 @@ function App() {
     </Route>
   </Switch>
   <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
+  <ModalWindow onOpen={isModalVisible} onClose={handleModalClose} />
 </CurrentUserContext.Provider>
 );
 }
