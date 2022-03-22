@@ -1,4 +1,4 @@
-import { MAIN_API } from "../utils/constants";
+import { baseUrl } from "../utils/constants";
 
 class MainApi {
   constructor(options) {
@@ -10,7 +10,7 @@ class MainApi {
     return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getUserData(jwt) {
+  getUserData() {
     return fetch(`${this._url}${"users"}/${"me"}`, {
       method: "GET",
       credentials: 'include',
@@ -61,9 +61,9 @@ class MainApi {
         duration: data.duration,
         year: data.year,
         description: data.description,
-        image: `${BASE_URL}${data.image.url}`,
+        image: `${baseUrl}${data.image.url}`,
         trailer: data.trailerLink,
-        thumbnail: `${BASE_URL}${data.image.formats.thumbnail.url}`,
+        thumbnail: `${baseUrl}${data.image.formats.thumbnail.url}`,
         movieId: data.id.toString(),
         nameRU: data.nameRU,
         nameEN: data.nameEN,
@@ -87,7 +87,7 @@ class MainApi {
 }
 
 const mainApi = new MainApi({
-  url: MAIN_API,
+  url: "https://movies-explorer.azaripova.nomoredomains.rocks",
   headers: {
     authorization: `Bearer ${localStorage.getItem("jwt")}`,
     "Content-Type": "application/json",
