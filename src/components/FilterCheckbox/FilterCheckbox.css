@@ -3,6 +3,7 @@
     padding: 0 0 48px;
     display: flex;
     justify-content: center;
+    margin-top: 40px;
   }
   
   .filter-checkbox__handler {

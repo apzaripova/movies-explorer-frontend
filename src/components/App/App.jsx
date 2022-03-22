@@ -16,6 +16,7 @@ import Profile from '../Profile/Profile';
 
 import Authorization from '../Authorization/Authorization';
 import PopupMenu from '../PopupMenu/PopupMenu';
+import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import NotFound from '../NotFound/NotFound';
 
 function App() {
@@ -30,19 +31,12 @@ function App() {
   const [message, setMessage] = useState("");
   const [moviesMessage, setMoviesMessage] = useState("");
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isModalVisible, setIsModalVisible] = useState({ visible: false });
+  const [isInfoTooltipActive, setInfoTooltipActive] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
   const history = useHistory();
   let location = useLocation();
 
   const handleError = (err) => console.error(err);
-
-  const handleModalOpen = (message) => {
-    setIsModalVisible({ type: message.type, title: message.title, visible: message.visible });
-  };
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -73,9 +67,11 @@ function App() {
       .register(name, email, password)
       .then((res) => {
         if (res) {
-          setMessage("");
+          setIsSuccess(true)
           handleLogin(email, password);
           setLoggedIn(true);
+          setInfoTooltipActive(true)
+          setIsLoading(false)
           setCurrentUser(res);
         }
       })
@@ -85,6 +81,9 @@ function App() {
         } else {
           setMessage("При регистрации пользователя произошла ошибка");
         }
+        setIsSuccess(false)
+        setIsLoading(false)
+        setInfoTooltipActive(true)
       });
   }
 
@@ -102,6 +101,9 @@ function App() {
           setLoggedIn(true);
           getCurrentUser();
           history.push("/movies");
+          setIsSuccess(true)
+          setInfoTooltipActive(true)
+          setIsLoading(false)
           return loggedIn;
         }
       })
@@ -116,6 +118,8 @@ function App() {
         localStorage.removeItem("jwt");
       });
   }
+
+  // редактирование профиля пользователя
 
   function handleUpdateUser(data) {
     mainApi
@@ -156,6 +160,27 @@ function App() {
     setIsMenuOpen();
   }
 
+  // закрытие попапа со статусом события
+
+  function closePopup() {
+    setInfoTooltipActive(false)
+  }
+
+  React.useEffect(() => {
+    function handleEscClose(evt) {
+      if (evt.key === 'Escape') {
+        closePopup();
+      }
+    }
+    document.addEventListener('keydown', handleEscClose);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscClose);
+    }
+  }, []);
+
+
+
   function handleGetMovies(keyword) {
     setMoviesMessage("");
     const key = new RegExp(keyword, "gi");
@@ -176,34 +201,36 @@ function App() {
       localStorage.setItem("sortedMovies", JSON.stringify(checkedLikes));
     }
 	}
+	
+	function handleLikeChange(movie) {
+    const clickedMovie = movie.isSaved;
+    if (clickedMovie) {
+      handleDislikeClick(movie);
+    } else {
+      handleLikeClick(movie);
+    }
+  }
 
   function handleLikeClick(movie) {
-    setIsLoading(true);
+    const jwt = localStorage.getItem("jwt");
     mainApi
-      .addMovie(movie)
-      .then(() => {
-        mainApi.
-        getUserMovies()
-          .then((list) => {
-            localStorage.favorite = JSON.stringify(list);
-            setUserMovies(list);
-          })
-          .catch((error) => {
-            setIsLoading(false);
-            handleError(error);
-            handleModalOpen({ type: 'fail', title: 'Ошибка загрузки данных.', visible: true });
-          });
+      .addMovie(movie, jwt)
+      .then((newMovie) => {
+        if (!newMovie) {
+          throw new Error("При добавлении фильма произошла ошибка");
+        } else {
+          localStorage.setItem(
+            "userMovies",
+            JSON.stringify((newMovie = [newMovie.movie, ...userMovies]))
+          );
+          setUserMovies(newMovie);
+        }
       })
-      .then(() => {
-        setIsLoading(false);
-        handleModalOpen({ type: 'success', title: 'Фильм сохранен успешно.', visible: true });
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        handleError(error);
-        handleModalOpen({ type: 'fail', title: 'Ошибка, сохранение не выполнено.', visible: true });
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
       });
-  };
+  }
+
 
 	function handleDislikeClick(movie) {
 		const jwt = localStorage.getItem("jwt");
@@ -319,14 +346,15 @@ function App() {
     <Route exact path="/">
       <Main loggedIn={loggedIn} onMenu={handleMenu} />
     </Route>
-    <ProtectedRoute
+    <Route>
+      <Movies
       path="/movies"
       component={Movies}
       onMenu={handleMenu}
       movies={filterShortMovies(sortedMovies)}
       onGetMovies={handleGetMovies}
       loggedIn={loggedIn}
-      onAddMovie={handleLikeClick}
+      onAddMovie={handleLikeChange}
       onFilter={handleCheckBox}
       isShortMovie={shortMovies}
       message={moviesMessage}
@@ -335,6 +363,7 @@ function App() {
       likedMovies={checkSavedMovie}
       isLoading={isLoading}
     />
+    </Route>
     <ProtectedRoute
       path="/saved-movies"
       component={SavedMovies}
@@ -359,7 +388,6 @@ function App() {
                 linkText={'Регистрация'}
                 link={'/sign-up'}
                 handleSubmit={handleLogin}
-                message={message} 
               />
             </Route>
             <Route path="/sign-up">
@@ -371,7 +399,6 @@ function App() {
                 linkText={'Войти'}
                 link={'/sign-in'}
                 handleSubmit={handleRegister}
-                message={message}
               />
             </Route>
     <ProtectedRoute
@@ -381,13 +408,17 @@ function App() {
       loggedIn={loggedIn}
       onSignOut={handleSignOut}
       onEditUser={handleUpdateUser}
-      message={message}
     />
     <Route path="*">
       <NotFound />
     </Route>
   </Switch>
   <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
+  <InfoTooltip 
+          isOpen={isInfoTooltipActive} 
+          onClose={closePopup} 
+          isSuccess={isSuccess} 
+        />
 </CurrentUserContext.Provider>
 );
 }

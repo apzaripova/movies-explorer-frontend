@@ -6,6 +6,9 @@ export const baseUrl = "https://api.nomoreparties.co";
 export const MIN_NUMBER_OF_CARDS = 4;
 export const MAX_NUMBER_OF_CARDS = 100;
 
+export const SUCCESS_MESSAGE = 'Успешно!';
+export const FAILED_MESSAGE = 'Что-то пошло не так! Попробуйте еще раз.';
+
 export const DEFAULT_DATA = {
     country: 'country N/A',
     director: 'director N/A',
