@@ -394,7 +394,7 @@ function App() {
     React.useEffect(() => {
       const jwt = localStorage.getItem('jwt');
       if (jwt) {
-          mainApi.getUserMovies()
+        mainApi.getSavedMovies()
             .then((savedMovieData) => {
               setIsFailed(false)
               const userSavedMovies = savedMovieData.filter((movie) => {

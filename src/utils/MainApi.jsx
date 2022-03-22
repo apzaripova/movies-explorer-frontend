@@ -15,10 +15,9 @@ class MainApi {
       method: "GET",
       credentials: 'include',
       headers: {
-        authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
     }).then(this._getResponse);
   }
 
@@ -26,7 +25,10 @@ class MainApi {
     return fetch(`${this._url}users/me`, {
       method: "PATCH",
       credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      },
       body: JSON.stringify({
         name: newData.name,
         email: newData.email,
@@ -34,51 +36,51 @@ class MainApi {
     }).then(this._getResponse);
   }
 
-  getUserMovies(jwt) {
-    return fetch(`${this._url}${"movies"}`, {
-      method: "GET",
-      credentials: 'include',
+  getSavedMovies() {
+    return fetch(`${this._url}/movies`, {
       headers: {
-        authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }).then(this._getResponse);
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+      }
+    })
+    .then((res) => {
+      return this._checkResponse(res)
+    })
   }
 
-  addMovie(movie, jwt) {
-    return fetch(`${this._url}${"movies"}`, {
-      method: "POST",
-      credentials: 'include',
+  addMovie(data) {
+    return fetch(`${this._url}/movies`, {
+      method: 'POST',
       headers: {
-        authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
       },
       body: JSON.stringify({
-        country: movie.country,
-        director: movie.director,
-        duration: movie.duration,
-        year: movie.year,
-        description: movie.description,
-        image: movie.image,
-        trailer: movie.trailer,
-        thumbnail: movie.thumbnail,
-        movieId: movie.movieId,
-        nameRU: movie.nameRU,
-        nameEN: movie.nameEN,
-      }),
-    }).then(this._getResponse);
+        country: data.country,  
+        director: data.director,
+        duration: data.duration,
+        year: data.year,
+        description: data.description,
+        image: `${BASE_URL}${data.image.url}`,
+        trailer: data.trailerLink,
+        thumbnail: `${BASE_URL}${data.image.formats.thumbnail.url}`,
+        movieId: data.id.toString(),
+        nameRU: data.nameRU,
+        nameEN: data.nameEN,
+      })
+    })
+    .then((res) => {
+      return this._checkResponse(res)
+    })
   }
 
-  deleteMovie(id, jwt) {
-    return fetch(`${this._url}${"movies"}/${id}`, {
+  deleteMovie(movie) {
+    return fetch(`${this._url}${"movies"}/${movie}`, {
       method: "DELETE",
       credentials: 'include',
       headers: {
-        authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
       },
     }).then(this._getResponse);
   }
