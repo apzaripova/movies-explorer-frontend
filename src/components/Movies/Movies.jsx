@@ -1,4 +1,4 @@
-import React, { Suspense }  from "react";
+import React  from "react";
 import Preloader from "../Preloader/Preloader";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
@@ -19,8 +19,9 @@ function Movies(props) {
         onFilter={props.onFilter}
         isShortMovie={props.isShortMovie}
       />
-      <Suspense fallback={<Preloader />}>
-      <MoviesCardList
+      {props.isLoading
+          ? <Preloader />
+          : <MoviesCardList
         movies={props.movies}
         onGetMovies={props.handleGetMovies}
         onAddMovie={props.onAddMovie}
@@ -29,7 +30,7 @@ function Movies(props) {
         savedMovies={props.savedMovies}
         likedMovies={props.likedMovies}
       />
-      </Suspense>
+    }
       <Footer />
     </section>
   );

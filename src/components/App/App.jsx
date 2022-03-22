@@ -29,7 +29,7 @@ function App() {
   const [shortMovies, setShortMovies] = useState(false);
   const [message, setMessage] = useState("");
   const [moviesMessage, setMoviesMessage] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState({ visible: false });
+  const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
   let location = useLocation();
 
@@ -144,10 +144,6 @@ function App() {
   function closeMenu() {
     setIsMenuOpen();
   }
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-  };
 
   function handleGetMovies(keyword) {
     setMoviesMessage("");
@@ -327,6 +323,7 @@ function App() {
       savedMovies={userMovies}
       onSignOut={handleSignOut}
       likedMovies={checkSavedMovie}
+      isLoading={isLoading}
     />
     <ProtectedRoute
       path="/saved-movies"
@@ -341,6 +338,7 @@ function App() {
       message={moviesMessage}
       isSavedMovies={true}
       onSignOut={handleSignOut}
+      isLoading={isLoading}
     />
     <Route path="/sign-in">
               <Authorization 
