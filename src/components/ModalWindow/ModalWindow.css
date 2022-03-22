@@ -69,11 +69,11 @@
   }
   
   .modal__icon_success {
-    background-image: url('../../images/svg/image-popup-ok.svg');
+    background-image: url('../../images/svg/filtercheckbox-active.svg');
   }
   
   .modal__icon_denied {
-    background-image: url('../../images/svg/image-popup-error.svg');
+    background-image: url('../../images/svg/filtercheckbox-disabl.svg');
   }
   
   .modal__title {

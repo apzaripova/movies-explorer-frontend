@@ -15,8 +15,8 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 
 import Authorization from '../Authorization/Authorization';
-import ModalWindow from "../ModalWindow/ModalWindow";
 import PopupMenu from '../PopupMenu/PopupMenu';
+import ModalWindow from "../ModalWindow/ModalWindow";
 import NotFound from '../NotFound/NotFound';
 
 function App() {
