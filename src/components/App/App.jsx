@@ -346,8 +346,7 @@ function App() {
     <Route exact path="/">
       <Main loggedIn={loggedIn} onMenu={handleMenu} />
     </Route>
-    <Route>
-      <Movies
+    <ProtectedRoute
       path="/movies"
       component={Movies}
       onMenu={handleMenu}
@@ -363,7 +362,6 @@ function App() {
       likedMovies={checkSavedMovie}
       isLoading={isLoading}
     />
-    </Route>
     <ProtectedRoute
       path="/saved-movies"
       component={SavedMovies}
