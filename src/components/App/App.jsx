@@ -134,15 +134,13 @@ function App() {
       .editUserInfo(data)
       .then((editedData) => {
         setCurrentUser(editedData);
-        setMessage("Данные профиля успешно обновлены");
+        setInfoTooltipActive(true)
+        setIsSuccess(true)
       })
       .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        if (err.status === 409) {
-          setMessage("Пользователь с таким email уже существует");
-        } else {
-          setMessage("При изменении данных профиля произошла ошибка");
-        }
+        console.log(err);
+        setIsSuccess(false)
+        setInfoTooltipActive(true)
       });
   }
 

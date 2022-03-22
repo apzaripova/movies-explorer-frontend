@@ -2,6 +2,7 @@ import React from 'react';
 import successLogo from '../../images/svg/image-popup-ok.svg';
 import errorLogo from '../../images/svg/image-popup-error.svg';
 import {SUCCESS_MESSAGE, FAILED_MESSAGE} from '../../utils/constants';
+import './InfoTooltip.css';
 
 function InfoTooltip(props) {
 
