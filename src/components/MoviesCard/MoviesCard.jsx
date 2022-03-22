@@ -31,6 +31,17 @@ function MoviesCard(props) {
 
   return (
     <div className="card">
+      <img
+          className="card__img"
+          alt={props.name}
+          src={
+            props.isSavedMovies
+              ? props.movie.image
+              : `${baseUrl}${
+                  props.movie.image ? props.movie.image.url : props.image
+                }`
+          }
+        />
       <div className="card__description">
         <ul className="card__description-container">
           <li className="card__title">{props.name || props.movie.nameRU}</li>
@@ -53,17 +64,6 @@ function MoviesCard(props) {
         rel="noopener noreferrer nofollow
   "
       >
-        <img
-          className="card__img"
-          alt={props.name}
-          src={
-            props.isSavedMovies
-              ? props.movie.image
-              : `${baseUrl}${
-                  props.movie.image ? props.movie.image.url : props.image
-                }`
-          }
-        />
       </a>
     </div>
   );
