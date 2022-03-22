@@ -16,7 +16,6 @@ import Profile from '../Profile/Profile';
 
 import Authorization from '../Authorization/Authorization';
 import PopupMenu from '../PopupMenu/PopupMenu';
-import ModalWindow from "../ModalWindow/ModalWindow";
 import NotFound from '../NotFound/NotFound';
 
 function App() {
@@ -381,7 +380,6 @@ function App() {
     </Route>
   </Switch>
   <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
-  <ModalWindow onOpen={isModalVisible} onClose={handleModalClose} />
 </CurrentUserContext.Provider>
 );
 }

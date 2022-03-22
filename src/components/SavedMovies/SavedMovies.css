@@ -5,13 +5,11 @@
   }
   
   .movies-message {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
+    font: normal 400 14px/18px Inter, serif;
+    color: #858585;
+    margin: 0;
+    padding: 0;
+    user-select: none;
     text-align: center;
-    margin: 0 auto 20px;
-    text-align: center;
-      flex: auto;
+    flex: auto;
   }
