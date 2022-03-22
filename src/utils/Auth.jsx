@@ -1,10 +1,6 @@
 import { AUTH } from "../utils/constants";
 
 const BASE_URL = AUTH;
-const headers = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
 
 const getResponse = (res) => {
   if (res.ok) {
@@ -16,7 +12,10 @@ const getResponse = (res) => {
 export const register = (name, email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
-    headers: headers,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       name,
       email,
@@ -30,7 +29,10 @@ export const register = (name, email, password) => {
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
-    headers: headers,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       password,
       email,
@@ -45,13 +47,14 @@ export const authorize = (email, password) => {
     });
 };
 
-export const getContent = (token) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: "GET",
     headers: {
-      headers,
-      Authorization: `Bearer ${token}`,
-    },
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization' : `Bearer ${token}`
+    }
   }).then((res) => {
     return getResponse(res);
   });
