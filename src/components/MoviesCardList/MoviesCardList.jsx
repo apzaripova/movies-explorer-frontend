@@ -1,53 +1,89 @@
-import React, { Suspense } from "react";
-import "../MoviesCard/MoviesCard.css";
-import Preloader from "../Preloader/Preloader";
-import { MIN_NUMBER_OF_CARDS, MAX_NUMBER_OF_CARDS } from "../../utils/constants";
-import More from "../More/More";
-const MoviesCard = React.lazy(() => import("../MoviesCard/MoviesCard")); // Ленивая загрузка
+import React from 'react';
+import { Route, useLocation } from 'react-router-dom';
+import MoviesCard from '../MoviesCard/MoviesCard';
+import {
+  BREAKPOINT_MOBILE,
+  BREAKPOINT_TABLET,
+  BREAKPOINT_DESKTOP,
+  VISIBLE_MOVIES_MOBILE,
+  MOVIES_TO_LOAD_MOBILE,
+  VISIBLE_MOVIES_TABLET,
+  MOVIES_TO_LOAD_TABLET,
+  VISIBLE_MOVIES_DESKTOP,
+  MOVIES_TO_LOAD_DESKTOP } 
+  from '../../utils/constants';
+import DisplayMovieCards from '../../utils/MoviesToDisplay';
 
 function MoviesCardList(props) {
-  const [counter, setCounter] = React.useState(4);
 
-  function showMoreMovies() {
-    setCounter(counter + 4);
-  }
+  const [visibleMovies, setVisibleMovies] = React.useState(0);
+  const [moviesToLoad, setMoviesToLoad] = React.useState(0);
+  const { windowWidth } = DisplayMovieCards();
+  const location = useLocation();
+
+  React.useState(() => {
+    if (location.pathname === '/movies') {
+      if (windowWidth <= BREAKPOINT_MOBILE) {
+        setVisibleMovies(VISIBLE_MOVIES_MOBILE);
+        setMoviesToLoad(MOVIES_TO_LOAD_MOBILE);
+      } else if (windowWidth <= BREAKPOINT_TABLET) {
+        setVisibleMovies(VISIBLE_MOVIES_TABLET);
+        setMoviesToLoad(MOVIES_TO_LOAD_TABLET);
+      } else if (windowWidth < BREAKPOINT_DESKTOP && windowWidth >= BREAKPOINT_TABLET) {
+        setVisibleMovies(VISIBLE_MOVIES_DESKTOP);
+        setMoviesToLoad(MOVIES_TO_LOAD_DESKTOP);
+      } else if (windowWidth >= BREAKPOINT_DESKTOP) {
+        setVisibleMovies(VISIBLE_MOVIES_DESKTOP)
+        setMoviesToLoad(MOVIES_TO_LOAD_DESKTOP);
+      }
+    }
+  }, [windowWidth, location]);
+
+  const handleShowMoreMovies = () => {
+    setVisibleMovies(prevVisibleMovies => prevVisibleMovies + moviesToLoad)
+  } 
+
   return (
-    <>
-      <section className="movies-card">
-        <Suspense fallback={<Preloader />}>
-          {props.message ? (
-            <p className="movies-message">{props.message}</p>
-          ) : (
-            props.movies
-              .slice(0, counter)
-              .map((movie, id) => (
-                <MoviesCard
-                  movie={movie}
-                  name={movie.nameRU}
-                  duration={movie.duration}
-                  key={id}
-                  id={movie._id}
-                  {...movie}
-                  isSavedMovies={props.isSavedMovies}
-                  onAddMovie={props.onAddMovie}
-                  onDelete={props.onDelete}
-                  savedMovies={props.savedMovies}
-                  likedMovies={props.likedMovies}
-                />
-              ))
-          )}
-        </Suspense>
-      </section>
-      {props.movies.length >= MIN_NUMBER_OF_CARDS &&
-      props.movies.length > counter &&
-      props.movies.length <= MAX_NUMBER_OF_CARDS &&
-      !props.message ? (
-				<More showMoreMovies={showMoreMovies}  />
-      ) : (
-        ""
-      )}
-    </>
-  );
-}
+    <section className="movie-list">
+    <Route exact path="/movies">
+      {props.moviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
+      {!props.isLoading && props.isFailed && <p className="movie-list__not-found">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</p>}
+      <ul className="movie-list__container">
+        {
+          props.movies.slice(0, visibleMovies).map((movie, i) => (
+            <MoviesCard
+            key={i}
+            movie={movie}
+            onSaveClick={props.onSaveClick}
+            savedMovies={props.savedMovies}
+            onMovieDelete={props.onMovieDelete}
+            />
+          ))
+        }
+      </ul>
+      <button 
+        className={`button button_type_more ${visibleMovies >= props.movies.length && 'button_type_more_disabled'}`}
+        type="button" 
+        aria-label="more button"
+        onClick={handleShowMoreMovies}>Еще</button>
+    </Route>
+    <Route path="/saved-movies">
+    {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
+      {!props.isLoading && props.isFailed && <p className="movie-list__not-found">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</p>}
+      <ul className="movie-list__container">
+          {
+            props.movies.map((movie, i) => (
+              <MoviesCard
+              key={i}
+              movie={movie}
+              savedMovies={props.savedMovies}
+              onMovieDelete={props.onMovieDelete}
+              />
+            ))
+          }
+        </ul>
+    </Route>
+  </section>)  
+};
 
 export default MoviesCardList;

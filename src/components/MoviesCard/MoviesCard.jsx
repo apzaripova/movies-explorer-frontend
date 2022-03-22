@@ -1,72 +1,52 @@
-import React from "react";
-import { baseUrl } from "../../utils/constants";
+import React from 'react';
+import { Route } from 'react-router';
+import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
 function MoviesCard(props) {
-  const isLiked = !props.isSavedMovies && props.likedMovies(props.movie);
 
-  function handleLikeClick() {
-    props.onAddMovie({
-      country: props.movie.country,
-      director: props.movie.director,
-      duration: props.movie.duration,
-      year: props.movie.year,
-      description: props.movie.description,
-      image: `${baseUrl}${props.movie.image ? props.movie.image.url : ""}`,
-      trailer: props.movie.trailerLink,
-      thumbnail: `${baseUrl}${
-        props.movie.image.formats.thumbnail
-          ? props.movie.image.formats.thumbnail.url
-          : ""
-      }`,
-      movieId: props.movie.id,
-      nameRU: props.movie.nameRU,
-      nameEN: props.movie.nameEN,
-      isSaved: props.movie.isSaved,
-    });
+  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id)
+
+  const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
+
+  function handleSaveClick() {
+      props.onSaveClick(props.movie);
+  }
+
+  function handleOpenTrailerClick() {
+    window.open(props.movie.trailerLink || props.movie.trailer);
   }
 
   function handleDeleteClick() {
-    props.onDelete(props.movie);
+    props.onMovieDelete(props.movie);
   }
 
+  const duration = `${Math.floor(props.movie.duration / MINUTES_SECONDS)}ч ${props.movie.duration % MINUTES_SECONDS}м`;
+  const movieImage = props.movie.image.url ? baseUrl + props.movie.image.url : props.movie.image;
+
   return (
-    <div className="card">
-      <img
-          className="card__img"
-          alt={props.name}
-          src={
-            props.isSavedMovies
-              ? props.movie.image
-              : `${baseUrl}${
-                  props.movie.image ? props.movie.image.url : props.image
-                }`
-          }
-        />
-      <div className="card__description">
-        <ul className="card__description-container">
-          <li className="card__title">{props.name || props.movie.nameRU}</li>
-          <li className="card__duration">{`${Math.floor(
-            (props.duration || props.movie.duration) / 60
-          )}ч ${(props.duration || props.movie.duration) % 60}м`}</li>
-        </ul>
-        {props.isSavedMovies ? (
-          <div className="card__delete" onClick={handleDeleteClick} />
-        ) : (
-          <div
-            className={`card__like ${isLiked ? "card__like_active" : ""}`}
-            onClick={handleLikeClick}
-          />
-        )}
-      </div>
-      <a
-        href={props.trailerLink || props.trailer}
-        target="_blank"
-        rel="noopener noreferrer nofollow
-  "
-      >
-      </a>
-    </div>
-  );
-}
+    <li className="movie">
+      <Route path="/movies">
+        <div className="movie__info">
+          <div className="movie__description">
+            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <p className="movie__duration">{duration}</p>
+          </div>
+          <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleSaveClick}/>
+        </div>
+        <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+      </Route>
+      <Route path="/saved-movies">
+        <div className="movie__info">
+          <div className="movie__description">
+            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <p className="movie__duration">{duration}</p>
+          </div>
+          <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/>
+        </div>
+        <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+      </Route>
+    </li>
+  )
+};
 
 export default MoviesCard;

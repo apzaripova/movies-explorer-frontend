@@ -1,30 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 
 function SearchForm(props) {
-  const [query, setQuery] = useState();
+  const [findedMovie, setFindedMovie] = useState("");
   const [error, setError] = React.useState("");
-  const location = useLocation().pathname;
-  const handleSearchMovie = (e) => setQuery(e.target.value);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (location === '/movies') localStorage.setItem('query', query);
-    props.onSubmit(query);
-  };
+  const [formValid, setFormValid] = React.useState(false);
 
-  useEffect(() => {
-    if (location === '/movies') return localStorage.query && setQuery(localStorage.query);
-    props.onSubmit('');
-    return null;
-  }, []);
-
-  useEffect(() => {
-    if (location === '/saved-movies') {
-      setQuery('');
+  function handleSearchMovie(e) {
+    setFindedMovie(e.target.value);
+    if (e.target.value.length === 0) {
+      setError("Нужно ввести ключевое слово");
+    } else {
+      setError("");
     }
-  }, [props.handleShortMovie]);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    props.onGetMovies(findedMovie);
+    setFindedMovie("");
+  }
+
+  React.useEffect(() => {
+    if (findedMovie && !error) {
+      setFormValid(true);
+    } else {
+      setFormValid(false);
+    }
+  }, [findedMovie, error]);
+
+  function handleChangeCheckbox() {
+    props.onChangeCheckbox();
+  }
 
   return (
     <>
@@ -39,7 +48,7 @@ function SearchForm(props) {
                 placeholder="Фильм"
                 minLength="2"
                 maxLength="40"
-                value={query || ''}
+                value={findedMovie}
                 onChange={handleSearchMovie}
                 required
               />
@@ -49,10 +58,14 @@ function SearchForm(props) {
             className="submit__button"
             type="submit"
             onClick={handleSubmit}
+            disabled={!formValid}
           ></button>
         </div>
         <div className="form__item-error">{error}</div>
-        <FilterCheckbox onClick={props.handleShortMovie} />
+        <FilterCheckbox 
+          onToggleCheckbox={handleChangeCheckbox}
+          checked={props.checked}
+          />
       </section>
     </>
   );
