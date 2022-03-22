@@ -30,8 +30,19 @@ function App() {
   const [message, setMessage] = useState("");
   const [moviesMessage, setMoviesMessage] = useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isModalVisible, setIsModalVisible] = useState({ visible: false });
   const history = useHistory();
   let location = useLocation();
+
+  const handleError = (err) => console.error(err);
+
+  const handleModalOpen = (message) => {
+    setIsModalVisible({ type: message.type, title: message.title, visible: message.visible });
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -165,35 +176,34 @@ function App() {
       localStorage.setItem("sortedMovies", JSON.stringify(checkedLikes));
     }
 	}
-	
-	function handleLikeChange(movie) {
-    const clickedMovie = movie.isSaved;
-    if (clickedMovie) {
-      handleDislikeClick(movie);
-    } else {
-      handleLikeClick(movie);
-    }
-  }
 
   function handleLikeClick(movie) {
-    const jwt = localStorage.getItem("jwt");
+    setIsLoading(true);
     mainApi
-      .addMovie(movie, jwt)
-      .then((newMovie) => {
-        if (!newMovie) {
-          throw new Error("При добавлении фильма произошла ошибка");
-        } else {
-          localStorage.setItem(
-            "userMovies",
-            JSON.stringify((newMovie = [newMovie.movie, ...userMovies]))
-          );
-          setUserMovies(newMovie);
-        }
+      .addMovie(movie)
+      .then(() => {
+        mainApi.
+        getUserMovies()
+          .then((list) => {
+            localStorage.favorite = JSON.stringify(list);
+            setUserMovies(list);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            handleError(error);
+            handleModalOpen({ type: 'fail', title: 'Ошибка загрузки данных.', visible: true });
+          });
       })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
+      .then(() => {
+        setIsLoading(false);
+        handleModalOpen({ type: 'success', title: 'Фильм сохранен успешно.', visible: true });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        handleError(error);
+        handleModalOpen({ type: 'fail', title: 'Ошибка, сохранение не выполнено.', visible: true });
       });
-  }
+  };
 
 	function handleDislikeClick(movie) {
 		const jwt = localStorage.getItem("jwt");
@@ -316,7 +326,7 @@ function App() {
       movies={filterShortMovies(sortedMovies)}
       onGetMovies={handleGetMovies}
       loggedIn={loggedIn}
-      onAddMovie={handleLikeChange}
+      onAddMovie={handleLikeClick}
       onFilter={handleCheckBox}
       isShortMovie={shortMovies}
       message={moviesMessage}

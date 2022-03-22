@@ -13,6 +13,7 @@ class MainApi {
   getUserData(jwt) {
     return fetch(`${this._url}${"users"}/${"me"}`, {
       method: "GET",
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
@@ -24,6 +25,7 @@ class MainApi {
   editUserInfo(newData) {
     return fetch(`${this._url}users/me`, {
       method: "PATCH",
+      credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
         name: newData.name,
@@ -35,6 +37,7 @@ class MainApi {
   getUserMovies(jwt) {
     return fetch(`${this._url}${"movies"}`, {
       method: "GET",
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
@@ -46,6 +49,7 @@ class MainApi {
   addMovie(movie, jwt) {
     return fetch(`${this._url}${"movies"}`, {
       method: "POST",
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
@@ -70,6 +74,7 @@ class MainApi {
   deleteMovie(id, jwt) {
     return fetch(`${this._url}${"movies"}/${id}`, {
       method: "DELETE",
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",

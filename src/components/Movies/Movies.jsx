@@ -1,5 +1,4 @@
 import React  from "react";
-import Preloader from "../Preloader/Preloader";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import SearchForm from "../SearchForm/SearchForm";
@@ -19,9 +18,7 @@ function Movies(props) {
         onFilter={props.onFilter}
         isShortMovie={props.isShortMovie}
       />
-      {props.isLoading
-          ? <Preloader />
-          : <MoviesCardList
+       <MoviesCardList
         movies={props.movies}
         onGetMovies={props.handleGetMovies}
         onAddMovie={props.onAddMovie}
@@ -30,7 +27,6 @@ function Movies(props) {
         savedMovies={props.savedMovies}
         likedMovies={props.likedMovies}
       />
-    }
       <Footer />
     </section>
   );
