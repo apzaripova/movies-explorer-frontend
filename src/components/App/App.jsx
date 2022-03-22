@@ -3,7 +3,7 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import "./App.css";
 
 import ProtectedRoute from '../../utils/ProtectedRoute';
-import * as moviesApi from "../../utils/MoviesApi";
+import allMoviesApi from '../../utils/MoviesApi';
 import mainApi from "../../utils/MainApi";
 import * as auth from "../../utils/Auth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
@@ -369,7 +369,7 @@ function App() {
     let jwt = localStorage.getItem('jwt');
     if (jwt) {
       setIsLoading(true)
-      moviesApi.getInitialMovies()
+      allMoviesApi.getAllMovies()
       .then((movieData) => {
         setIsFailed(false)
         localStorage.setItem('movies',  JSON.stringify(movieData));
@@ -435,6 +435,7 @@ function App() {
       path="/saved-movies"
       component={SavedMovies}
       onMenu={handleMenu}
+      loggedIn={loggedIn}
       movies={savedMovies}
       checked={checkedSaved}
       savedMovies={savedMovies}

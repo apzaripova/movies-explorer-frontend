@@ -1,24 +1,35 @@
-import { BASE_URL } from "../utils/constants";
+import {MOVIES_URL} from "../utils/constants";
 
-const headers = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
-
-const getResponse = (res) => {
-  if (res.ok) {
-    return res.json();
+export class MoviesApi {
+  constructor({address, headers}) {
+    this._address = address;
+    this._headers = headers;
   }
-  return Promise.reject(res.status);
-};
 
-export const getInitialMovies = () => {
-  if (headers.authorization !== "Bearer null") {
-    return fetch(`${BASE_URL}`, {
-      method: "GET",
-      headers: headers,
-    }).then((res) => {
-      return getResponse(res);
-    });
+  _checkResponse(res) {
+    if (res.ok) {
+        return res.json()
+    }
+
+    return Promise.reject(`Error ${res.status}`)
   }
-};
+
+  getAllMovies() {
+    return fetch(`${this._address}`, {
+        headers: this._headers
+    })
+    .then((res) => {
+        return this._checkResponse(res)
+    })
+  }
+
+}
+
+const allMoviesApi = new MoviesApi({
+  address: MOVIES_URL,
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
+export default allMoviesApi;

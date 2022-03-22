@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.nomoreparties.co/beatfilm-movies";
+export const MOVIES_URL = 'https://api.nomoreparties.co/beatfilm-movies';
 export const MAIN_API = 'https://movies-explorer.azaripova.nomoredomains.rocks/';
 export const AUTH ="https://movies-explorer.azaripova.nomoredomains.rocks";
 export const baseUrl = "https://api.nomoreparties.co";
