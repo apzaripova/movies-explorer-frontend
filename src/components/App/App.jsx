@@ -309,53 +309,41 @@ function App() {
   }, [currentUser]);
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
-        <div className="content">
+      <CurrentUserContext.Provider value={currentUser}>
           <Switch>
-          <Route exact path="/">
-            <Main loggedIn={loggedIn} onMenu={handleMenu} />
-          </Route>
-          <Route>
-            <Movies
-            path="/movies"
-            component={Movies}
-            onMenu={handleMenu}
-            movies={filterShortMovies(sortedMovies)}
-            onGetMovies={handleGetMovies}
-            loggedIn={loggedIn}
-            onAddMovie={handleLikeChange}
-            onFilter={handleCheckBox}
-            isShortMovie={shortMovies}
-            message={moviesMessage}
-            savedMovies={userMovies}
-            onSignOut={handleSignOut}
-            likedMovies={checkSavedMovie}
-          /></Route>
-          <ProtectedRoute
-            path="/saved-movies"
-            component={SavedMovies}
-            onMenu={handleMenu}
-            movies={filterShortMovies(userMovies)}
-            onGetMovies={handleGetSavedMovies}
-            loggedIn={loggedIn}
-            onDelete={handleMovieDeleteButton}
-            isShortMovie={shortMovies}
-            onFilter={handleCheckBox}
-            message={moviesMessage}
-            isSavedMovies={true}
-            onSignOut={handleSignOut}
-          />
-            <ProtectedRoute
-              path="/profile"
-              component={Profile}
-              onMenu={handleMenu}
-              loggedIn={loggedIn}
-              onSignOut={handleSignOut}
-              onEditUser={handleUpdateUser}
-              message={message}
-            />
-            <Route path="/sign-in">
+    <Route exact path="/">
+      <Main loggedIn={loggedIn} onMenu={handleMenu} />
+    </Route>
+    <ProtectedRoute
+      path="/movies"
+      component={Movies}
+      onMenu={handleMenu}
+      movies={filterShortMovies(sortedMovies)}
+      onGetMovies={handleGetMovies}
+      loggedIn={loggedIn}
+      onAddMovie={handleLikeChange}
+      onFilter={handleCheckBox}
+      isShortMovie={shortMovies}
+      message={moviesMessage}
+      savedMovies={userMovies}
+      onSignOut={handleSignOut}
+      likedMovies={checkSavedMovie}
+    />
+    <ProtectedRoute
+      path="/saved-movies"
+      component={SavedMovies}
+      onMenu={handleMenu}
+      movies={filterShortMovies(userMovies)}
+      onGetMovies={handleGetSavedMovies}
+      loggedIn={loggedIn}
+      onDelete={handleMovieDeleteButton}
+      isShortMovie={shortMovies}
+      onFilter={handleCheckBox}
+      message={moviesMessage}
+      isSavedMovies={true}
+      onSignOut={handleSignOut}
+    />
+    <Route path="/sign-in">
               <Authorization 
                 signIn={true}
                 greeting={'Рады видеть!'}
@@ -379,16 +367,22 @@ function App() {
                 message={message}
               />
             </Route>
-            <Route path="*">
-              <NotFound />
-            </Route>
-          </Switch>
-          <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
-          <ModalWindow onOpen={isModalVisible} onClose={handleModalClose} />
-        </div>
-      </div>
-    </CurrentUserContext.Provider>
-  );
+    <ProtectedRoute
+      path="/profile"
+      component={Profile}
+      onMenu={handleMenu}
+      loggedIn={loggedIn}
+      onSignOut={handleSignOut}
+      onEditUser={handleUpdateUser}
+      message={message}
+    />
+    <Route path="*">
+      <NotFound />
+    </Route>
+  </Switch>
+  <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
+</CurrentUserContext.Provider>
+);
 }
 
 export default App;
