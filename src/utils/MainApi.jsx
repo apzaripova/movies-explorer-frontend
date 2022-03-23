@@ -22,7 +22,7 @@ class MainApi {
   }
 
   editUserInfo(data) {
-    return fetch(`${this._url}users/me`, {
+    return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: {
         'Content-type': 'application/json',
