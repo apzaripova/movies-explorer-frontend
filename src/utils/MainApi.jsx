@@ -21,17 +21,16 @@ class MainApi {
     }).then(this._getResponse);
   }
 
-  editUserInfo(newData) {
+  editUserInfo(data) {
     return fetch(`${this._url}users/me`, {
       method: "PATCH",
-      credentials: 'include',
       headers: {
         'Content-type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('jwt')}`
       },
       body: JSON.stringify({
-        name: newData.name,
-        email: newData.email,
+        name: data.name,
+        email: data.email,
       }),
     }).then(this._getResponse);
   }

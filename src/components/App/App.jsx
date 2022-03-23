@@ -130,11 +130,11 @@ function App() {
 
   // редактирование профиля пользователя
 
-  function handleUpdateUser(data) {
+  function handleUpdateUser(user) {
     mainApi
-      .editUserInfo(data)
-      .then((editedData) => {
-        setCurrentUser(editedData);
+      .editUserInfo(user)
+      .then((data) => {
+        setCurrentUser(data);
         setInfoTooltipActive(true)
         setIsSuccess(true)
       })
@@ -469,14 +469,16 @@ function App() {
                 handleSubmit={handleRegister}
               />
             </Route>
-    <ProtectedRoute
+    <Route>
+      <Profile
       path="/profile"
       component={Profile}
       onMenu={handleMenu}
       loggedIn={loggedIn}
       onSignOut={handleSignOut}
-      onEditUser={handleUpdateUser}
+      onUpdateUser={handleUpdateUser}
     />
+    </Route>
     <Route path="*">
       <NotFound />
     </Route>
