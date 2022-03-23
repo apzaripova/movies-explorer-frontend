@@ -469,8 +469,7 @@ function App() {
                 handleSubmit={handleRegister}
               />
             </Route>
-    <Route>
-      <Profile
+    <ProtectedRoute
       path="/profile"
       component={Profile}
       onMenu={handleMenu}
@@ -478,7 +477,6 @@ function App() {
       onSignOut={handleSignOut}
       onUpdateUser={handleUpdateUser}
     />
-    </Route>
     <Route path="*">
       <NotFound />
     </Route>
