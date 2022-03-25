@@ -1,0 +1,130 @@
+.user-entry {
+    margin: auto;
+    max-width: 396px;
+    width: 100%;
+    text-align: left;
+    overflow-y: scroll;
+  }
+  
+  .user-entry__title {
+    margin: 40px 0;
+    font-size: 24px;
+    line-height: 1.21;
+    font-weight: 500;
+  }
+  
+  .user-entry__info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form__input_type_sign {
+    background: #f9f9f9;
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    display: flex;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 10px 0 0;
+    max-width: 370px;
+    padding: 15px;
+  }
+  
+  .user-entry__message {
+    color: #8b8b8b;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+  }
+  
+  .user-entry__link {
+    color: #2be080;
+    text-decoration: none;
+    transition: .2s;
+  }
+  
+  .user-entry__container {
+    padding: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user__container {
+    min-height: 266px;
+  }
+  
+  .user-entry__lable {
+    font-size: 10px;
+    line-height: 1.21;
+    font-weight: 400;
+    color: #A0A0A0;
+    margin-bottom: 5px;
+    margin-top: 24px;
+  }
+  
+  /* .user-entry__lable:nth-of-type(1) {
+    margin-top: 0;
+  } */
+
+  .button_type_sign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 90px 0 0 0;
+    padding: 0;
+    background: #2BE080;
+    border-radius: 3px;
+    height: 45px;
+    border: none;
+    max-width: 370px;
+    width: 100%;
+    color: white;
+  }
+  
+  .auth__submit_state_sign-in {
+    margin: 178px 0 0 0;
+  }
+  
+  .auth__submit_disabled {
+    border: 1px solid #8b8b8b;
+    background: unset;
+    color: #8b8b8b;
+  }
+  
+  .button_type_sign:hover {
+    transition: 0.2s;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  
+  .auth__submit_disabled:hover {
+    cursor: default;
+    opacity: 1;
+  }
+  
+  .auth__submit_disabled:active {
+    outline: none;
+  }
+  
+  .auth__submit_disabled:focus {
+    outline: none;
+  }
+  
+  @media screen and (max-width: 425px) {
+  
+    .user-entry {
+      text-align: center;
+      margin: 0 auto;
+    }
+  
+    .user-entry__message {
+      font-size: 12px;
+    }
+  
+    .user-entry__link {
+      font-size: 12px;
+      line-height: 15px;
+    }
+  
+  }

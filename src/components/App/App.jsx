@@ -14,7 +14,8 @@ import Movies from "../Movies/Movies";
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 
-import Authorization from '../Authorization/Authorization';
+import Register from '../Register/Register';
+import Login from '../Login/Login';
 import PopupMenu from '../PopupMenu/PopupMenu';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import NotFound from '../NotFound/NotFound';
@@ -339,29 +340,6 @@ function App() {
       })
     .catch((err) => console.log(err));
   }
-	
-	function checkSavedMovie(movie) {
-    return (movie.isSaved = userMovies.some(
-      (userMovie) => userMovie.movieId === movie.id
-    ));
-  }
-
-  function getCurrentUser() {
-    const jwt = localStorage.getItem("jwt");
-    mainApi
-      .getUserData(jwt)
-      .then((userData) => {
-        if (userData) {
-          setCurrentUser(userData);
-          localStorage.setItem("currentUser", JSON.stringify(userData));
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        localStorage.removeItem("jwt");
-        localStorage.removeItem("currentUser");
-      });
-  }
 
   // загрузка фильмов с внешнего сервера
 
@@ -446,29 +424,6 @@ function App() {
       onChangeCheckbox={handleSavedChangeCheckbox}
       onSavedNotFound={savedMoviesNotFound}
     />
-    <Route path="/sign-in">
-              <Authorization 
-                signIn={true}
-                greeting={'Рады видеть!'}
-                submit={'Войти'}
-                subline={'Ещё не зарегистрированы? '}
-                linkText={'Регистрация'}
-                link={'/sign-up'}
-                handleSubmit={handleLogin}
-                isLoading={isLoading}
-              />
-            </Route>
-            <Route path="/sign-up">
-              <Authorization 
-                signIn={false}
-                greeting={'Добро пожаловать!'}
-                submit={'Зарегистрироваться'}
-                subline={'Уже зарегистрированы? '}
-                linkText={'Войти'}
-                link={'/sign-in'}
-                handleSubmit={handleRegister}
-              />
-            </Route>
     <ProtectedRoute
       path="/profile"
       component={Profile}
@@ -477,6 +432,15 @@ function App() {
       onSignOut={handleSignOut}
       onUpdateUser={handleUpdateUser}
     />
+    <Route path="/signin">
+            <Login 
+            onLogin={handleLogin}
+            isLoading={isLoading}/>
+          </Route>
+          <Route path="/signup">
+            <Register 
+            onRegister={handleRegister}/>
+          </Route>
     <Route path="*">
       <NotFound />
     </Route>

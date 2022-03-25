@@ -24,10 +24,10 @@ function Main(props) {
           </Link>
         </div>
         <div className="header-auth">
-          <Link to="/sign-up" className="header-auth__register">
+          <Link to="/signup" className="header-auth__register">
             Регистрация
           </Link>
-          <Link to="/sign-in">
+          <Link to="/signin">
             <button className="header-auth__button">Войти</button>
           </Link>
         </div>
