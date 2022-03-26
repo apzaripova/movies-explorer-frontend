@@ -70,10 +70,10 @@ function App() {
     }
   }, [history, loggedIn, location.pathname]);
 
-  function handleRegister(name, email, password) {
+  function handleRegister({name, email, password}) {
     setIsLoading(true)
     auth
-      .register(name, email, password)
+      .register({name, email, password})
       .then((res) => {
         if (res) {
           setIsSuccess(true)
