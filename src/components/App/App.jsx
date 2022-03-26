@@ -77,7 +77,7 @@ function App() {
       .then((res) => {
         if (res) {
           setIsSuccess(true)
-          handleLogin(email, password);
+          handleLogin({email, password});
           setInfoTooltipActive(true)
           setIsLoading(false)
           return res
@@ -96,18 +96,15 @@ function App() {
     auth
       .authorize({email, password})
       .then((data) => {
-        if (!data) {
-          setMessage("Что-то пошло не так");
-          return false;
-        }
+        if (!data) throw new Error('Неверные имя пользователя или пароль')
         if (data.token) {
           setLoggedIn(true)
-          localStorage.setItem("jwt", data.token);
-          history.push("/movies");
+          localStorage.setItem('jwt', data.token)
+          history.push('/movies')
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
-          return data;
+          return data
         }
         mainApi.getUserData()
         .then((myData) => {
