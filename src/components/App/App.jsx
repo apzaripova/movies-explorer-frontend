@@ -91,10 +91,10 @@ function App() {
     });  
   };
 
-  function handleLogin(email, password) {
+  function handleLogin({email, password}) {
     setIsLoading(true)
     auth
-      .authorize(email, password)
+      .authorize({email, password})
       .then((data) => {
         if (!data) {
           setMessage("Что-то пошло не так");
