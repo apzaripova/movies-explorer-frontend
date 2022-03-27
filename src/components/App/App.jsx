@@ -216,7 +216,7 @@ function App() {
   function handleSaveMovieClick(movie) {
     const isSaved = savedMovies.some((item) => item.movieId === movie.id);
       if (!isSaved) {
-        mainApi.addMovie(movie)
+        mainApi.addMovie({movie})
         .then((newMovie) => {
           setSavedMovies([...savedMovies, newMovie])
         })
