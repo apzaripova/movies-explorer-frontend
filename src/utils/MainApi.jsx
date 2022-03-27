@@ -55,7 +55,7 @@ class MainApi {
         'Authorization': `Bearer ${localStorage.getItem('jwt')}`
       },
       body: JSON.stringify({
-        country: data.country,  
+        country: data.country,
         director: data.director,
         duration: data.duration,
         year: data.year,
