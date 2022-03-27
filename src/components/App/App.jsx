@@ -218,7 +218,8 @@ function App() {
       if (!isSaved) {
         mainApi.addMovie(movie)
         .then((newMovie) => {
-          setSavedMovies(savedMovies => ([newMovie, ...savedMovies]))
+          setSavedMovies([...savedMovies, newMovie])
+          console.log(savedMovies)
         })
         .catch((err) => {
           console.log(err);
