@@ -69,7 +69,7 @@ class MainApi {
       })
     })
     .then((res) => {
-      return this._checkResponse(res)
+      return this._getResponse(res)
     })
   }
 

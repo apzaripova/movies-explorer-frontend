@@ -26,6 +26,7 @@ function MoviesCard(props) {
   return (
     <li className="movie">
       <Route path="/movies">
+      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
         <div className="movie__info">
           <div className="movie__description">
             <h2 className="movie__title">{props.movie.nameRU}</h2>
@@ -33,9 +34,9 @@ function MoviesCard(props) {
           </div>
           <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleSaveClick}/>
         </div>
-        <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
       </Route>
       <Route path="/saved-movies">
+      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
         <div className="movie__info">
           <div className="movie__description">
             <h2 className="movie__title">{props.movie.nameRU}</h2>
@@ -43,7 +44,6 @@ function MoviesCard(props) {
           </div>
           <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/>
         </div>
-        <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
       </Route>
     </li>
   )
