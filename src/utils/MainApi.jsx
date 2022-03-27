@@ -37,6 +37,7 @@ class MainApi {
 
   getSavedMovies() {
     return fetch(`${this._url}/movies`, {
+      method: 'GET',
       headers: {
         'Content-type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('jwt')}`
@@ -47,7 +48,7 @@ class MainApi {
     })
   }
 
-  addMovie(data) {
+  addMovie({data}) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',
       headers: {
