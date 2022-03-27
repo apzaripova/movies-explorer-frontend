@@ -8,11 +8,10 @@
 }
 
 .movie-list__container {
-  display: grid;
-  row-gap: 30px;
-  column-gap: 24px;
-  list-style: none; 
-  grid-template-columns: repeat(auto-fit, 364px);
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px 30px;
   margin: 0;
   padding: 0;
 }
