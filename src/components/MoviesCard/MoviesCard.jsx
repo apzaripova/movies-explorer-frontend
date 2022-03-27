@@ -6,7 +6,7 @@ function MoviesCard(props) {
 
   const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id)
 
-  const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
+  const movieCardClassName = `button_type_save ${isSaved ? 'button_type_save-active' : 'button_type_save-disable'}`;
 
   function handleSaveClick() {
       props.onSaveClick(props.movie);

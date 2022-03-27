@@ -83,6 +83,12 @@
 }
 
 .button_type_delete {
+  display: block;
+  cursor: pointer;
+  width: 14px;
+  height: 12px;
+  border: none;
+  transition: transform .2s;
   background-image: url("../../images/svg/delete.svg");
 }
 
