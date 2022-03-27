@@ -47,7 +47,7 @@ class MainApi {
     })
   }
 
-  addMovie({data}) {
+  addMovie(data) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',
       headers: {
