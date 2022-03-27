@@ -216,9 +216,10 @@ function App() {
   function handleSaveMovieClick(movie) {
     const isSaved = savedMovies.some((item) => item.movieId === movie.id);
       if (!isSaved) {
-        mainApi.addMovie({movie})
+        mainApi.addMovie(movie)
         .then((newMovie) => {
           setSavedMovies([...savedMovies, newMovie])
+          localStorage.setItem('saved-movies', JSON.stringify([...savedMovies, newMovie]));
         })
         .catch((err) => {
           console.log(err);

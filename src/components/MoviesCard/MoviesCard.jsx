@@ -4,7 +4,9 @@ import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
 function MoviesCard(props) {
 
-  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id)
+  const isMovieLiked = props.checkIsMovieSaved(props.movie);
+
+  const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
 
   function handleSaveClick() {
       props.onSaveClick(props.movie);
@@ -30,7 +32,7 @@ function MoviesCard(props) {
             <h2 className="movie__title">{props.movie.nameRU}</h2>
             <p className="movie__duration">{duration}</p>
           </div>
-          <button className={`button_type_save ${isSaved ? 'button_type_save-active' : ''}`} type="button" aria-label="delete button" onClick={handleSaveClick}/>
+          <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleSaveClick}/>
         </div>
       </Route>
       <Route path="/saved-movies">
