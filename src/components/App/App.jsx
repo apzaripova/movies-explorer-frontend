@@ -411,7 +411,6 @@ function App() {
       component={SavedMovies}
       onMenu={handleMenu}
       loggedIn={loggedIn}
-      movies={savedMovies}
       checked={checkedSaved}
       savedMovies={savedMovies}
       isLoading={isLoading}

@@ -4,7 +4,8 @@ import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
 function MoviesCard(props) {
 
-  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id)
+  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id);
+  console.log(savedMovies)
 
   const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
 
