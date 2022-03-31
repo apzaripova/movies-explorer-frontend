@@ -56,17 +56,17 @@ class MainApi {
         'Authorization': `Bearer ${localStorage.getItem('jwt')}`
       },
       body: JSON.stringify({
-        country: data.country,
-        director: data.director,
-        duration: data.duration,
-        year: data.year,
-        description: data.description,
+        country: data.country || 'остуствует',
+        director: data.director || 'остуствует',
+        duration: data.duration || 0,
+        year: data.year || 'остуствует',
+        description: data.description || 'остуствует',
         image: `${baseUrl}${data.image.url}`,
         trailer: data.trailerLink,
         thumbnail: `${baseUrl}${data.image.formats.thumbnail.url}`,
         movieId: data.id.toString(),
-        nameRU: data.nameRU,
-        nameEN: data.nameEN,
+        nameRU: data.nameRU || 'остуствует',
+        nameEN: data.nameEN || 'остуствует',
       })
     })
     .then((res) => {
