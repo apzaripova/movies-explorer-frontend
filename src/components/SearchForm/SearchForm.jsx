@@ -46,7 +46,7 @@ function SearchForm(props) {
           </form>
           <button 
             type="submit" 
-            className={`button button_type_search ${!isFormValid ? "button_type_search_disabled" : ""}`} 
+            className="button_type_search"
             aria-label="search a movie">
           </button>
         </div>
