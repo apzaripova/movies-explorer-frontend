@@ -413,7 +413,6 @@ function App() {
       loggedIn={loggedIn}
       movies={savedMovies}
       checked={checkedSaved}
-      savedMovies={savedMovies}
       isLoading={isLoading}
       isFailed={isFailed}
       onMovieDelete={handleDeleteMovieClick}
