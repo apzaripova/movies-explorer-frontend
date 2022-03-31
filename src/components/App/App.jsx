@@ -219,7 +219,6 @@ function App() {
         mainApi.addMovie(movie)
         .then((newMovie) => {
           setSavedMovies([...savedMovies, newMovie])
-          localStorage.setItem('saved-movies', JSON.stringify([...savedMovies, newMovie]));
         })
         .catch((err) => {
           console.log(err);
