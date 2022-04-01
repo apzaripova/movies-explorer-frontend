@@ -13,16 +13,20 @@ function SavedMovies(props) {
       <Header className="header header__white">
         <Navigation onClick={props.onMenu} />
       </Header>
-      <SearchForm onGetMovies={props.onGetMovies} />
-      { props.isLoading ? <Preloader/> :
-        <MoviesCardList
-          isSavedMovies={props.isSavedMovies}
-					movies={props.movies}
-          onGetMovies={props.onGetMovies}
-          onDelete={props.onDelete}
-          message={props.message}
-        /> }
-        <p className="movies-message">У вас пока нет сохраненных фильмов</p>
+      <SearchForm 
+        onSubmit={props.onHandleSubmit} 
+        onChangeCheckbox={props.onChangeCheckbox}
+        checked={props.checked}
+        />
+        { props.isLoading ? <Preloader/> :
+      <MoviesCardList 
+        movies={props.movies}
+        onMovieDelete={props.onMovieDelete}
+        savedMovies={props.savedMovies}
+        savedMoviesNotFound={props.onSavedNotFound}
+        moviesNotFound={props.onMoviesNotFound}
+        isLoading={props.isLoading}
+        isFailed={props.isFailed}/> }
       <Footer />
     </section>
   );
