@@ -1,12 +1,13 @@
 import React from 'react';
 import { Route } from 'react-router';
+import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
 function MoviesCard(props) {
+  const currentUser = React.useContext(CurrentUserContext);
+  const isLiked = props.movie.owner === currentUser._id;
 
-  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id);
-
-  const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
+  const movieCardClassName = `button button_type_save ${isLiked ? 'button_type_save-active' : ''}`;
 
   function handleSaveClick() {
       props.onSaveClick(props.movie);
