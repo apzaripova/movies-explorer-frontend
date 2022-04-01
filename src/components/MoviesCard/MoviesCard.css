@@ -92,6 +92,10 @@
   border: none;
   transition: transform .2s;
   background-image: url("../../images/svg/delete.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
+  background-color: white;
 }
 
 @media screen and (max-width: 1279px) {
