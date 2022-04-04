@@ -29,7 +29,6 @@ function SearchForm(props) {
   return (
     <>
       <section className="search-form">
-        <div className="search-form__container">
           <form className="search-form__form" onSubmit={handleSubmit}>
             <label className="search-form__field">
               <input
@@ -43,14 +42,12 @@ function SearchForm(props) {
                 required
               />
             </label>
-          </form>
-          <button 
+            <button 
             type="submit" 
             className="button_type_search"
             aria-label="search a movie">
           </button>
-        </div>
-        <div className="form__item-error">{error}</div>
+          </form>
         <FilterCheckbox 
           onToggleCheckbox={handleChangeCheckbox}
           checked={props.checked}
