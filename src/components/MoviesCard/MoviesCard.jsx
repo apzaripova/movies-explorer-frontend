@@ -1,41 +1,41 @@
 import React from 'react';
-import { Route } from 'react-router';
 import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
+import { SavedMoviesContext } from '../../contexts/SavedMoviesContext';
 
 function MoviesCard(props) {
-
-  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id);
+  const savedMovies = React.useContext(SavedMoviesContext);
+  const isSaved = savedMovies.some(movie => movie.movieId === props.card.movieId);
 
   const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
 
   const handleCheckBoxClick = () => {
     if (isSaved) {
-      props.onMovieDelete(props.movie);
+      props.onDeleteMovie(props.card);
     } else {
-      props.onSaveClick(props.movie);
+      props.onSaveMovie(props.card);
     }
   }
 
   function handleOpenTrailerClick() {
-    window.open(props.movie.trailerLink || props.movie.trailer);
+    window.open(props.card.trailerLink || props.card.trailer);
   }
 
   function handleDeleteClick() {
-    props.onMovieDelete(props.movie);
+    props.onDeleteMovie(props.card);
   }
 
-  const duration = `${Math.floor(props.movie.duration / MINUTES_SECONDS)}ч ${props.movie.duration % MINUTES_SECONDS}м`;
-  const movieImage = props.movie.image.url ? baseUrl + props.movie.image.url : props.movie.image;
+  const duration = `${Math.floor(props.card.duration / MINUTES_SECONDS)}ч ${props.card.duration % MINUTES_SECONDS}м`;
+  const movieImage = props.card.image.url ? baseUrl + props.card.image.url : props.card.image;
 
   return (
     <li className="movie">
-      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+      <img className="movie__image" src={movieImage} alt={props.card.nameRU} onClick={handleOpenTrailerClick}/>
         <div className="movie__info">
           <div className="movie__description">
-            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <h2 className="movie__title">{props.card.nameRU}</h2>
             <p className="movie__duration">{duration}</p>
           </div>
-          {props.savedMovies ?
+          {props.isSavedMoviesPage ?
             <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/> :
             <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleCheckBoxClick}/>
           }

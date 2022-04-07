@@ -16,14 +16,13 @@ function Movies(props) {
       </Header>
       <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={props.movies} />
        <MoviesCardList
-          movies={props.movies}
-          isLoading={props.isLoading}
           isFailed={props.isFailed}
-          savedMovies={props.savedMovies}
-          searchInfoBox={props.searchInfoBox}
-          onSaveClick={props.onSaveClick}
-          onMovieDelete={props.onMovieDelete}
-          moviesNotFound={props.onMoviesNotFound}/>
+          cards={props.currentCards} 
+          isLoading={props.isLoading} 
+          isSavedMoviesPage={false}
+          searchInfoBox={props.searchInfoBox} 
+          onSaveMovie={props.onSaveMovie} 
+          onDeleteMovie={props.onDeleteMovie}/>
         <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
               onClick={props.onLoadMore}>Ещё</button>
       <Footer />

@@ -7,7 +7,7 @@ import allMoviesApi from '../../utils/MoviesApi';
 import mainApi from "../../utils/MainApi";
 import * as auth from "../../utils/Auth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import {searchMovieByKeyword, searchShortMovie, filterMovies} from '../../utils/FilterMovies';
+import { SavedMoviesContext } from '../../contexts/SavedMoviesContext';
 
 import Main from '../Main/Main';
 import Movies from "../Movies/Movies";
@@ -22,24 +22,26 @@ import NotFound from '../NotFound/NotFound';
 
 function App() {
 
+  const [movies, setMovies] = React.useState([]);
+
   const [currentUser, setCurrentUser] = useState({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [selectedMovies, setSelectedMovies] = React.useState([]);
   const [selectedSavedMovies, setSelectedSavedMovies] = React.useState(savedMovies);
+  const [currentPage] = React.useState(1);
   const [searchInfoBox, setSearchInfoBox] = React.useState('');
   const [allMovies, setAllMovies] = React.useState([]);
   const [isFailed, setIsFailed] = React.useState(false);
-  const [searchedMovies, setSearchedMovies] = React.useState([]);
-  const [checked, setChecked] = React.useState(false);
-  const [checkedSaved, setCheckedSaved] = React.useState(false);
-  const [moviesNotFound, setMoviesNotFound] = React.useState(false);
-  const [savedMoviesNotFound, setSavedMoviesNotFound] = React.useState(false);
   const [isInfoTooltipActive, setInfoTooltipActive] = React.useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [cardsPerPage, setCardsPerPage] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = selectedMovies.slice(indexOfFirstCard, indexOfLastCard);
   const history = useHistory();
   let location = useLocation();
 
@@ -177,43 +179,9 @@ function App() {
     }
   }, []);
 
-
-
-  // поиск фильмов
-
-  function handleMovieSearchSubmit(input) {
-    if (location.pathname === '/movies') {
-        const searchedMovies = filterMovies(allMovies, input, checked)
-        if (checked) {
-          localStorage.setItem('searchedShortMovies', JSON.stringify(searchedMovies));
-          const searchedExtraMovies = searchMovieByKeyword(allMovies, input)
-          localStorage.setItem('searchedMovies', JSON.stringify(searchedExtraMovies));
-        } else {
-          localStorage.setItem('searchedMovies', JSON.stringify(searchedMovies));
-        }
-        setSearchedMovies(searchedMovies)
-        setMoviesNotFoundMessage(searchedMovies)
-      
-    } else if (location.pathname === '/saved-movies') {
-      setIsLoading(true)
-      mainApi.getSavedMovies()
-      .then((movies) => {
-        const userSavedMovies = movies.filter((movie) => {
-          return movie.owner === currentUser._id
-        })
-        const searchedSavedMovies = searchMovieByKeyword(userSavedMovies, input)
-          localStorage.setItem('searchedSavedMovies', JSON.stringify(searchedSavedMovies));
-      setSavedMovies(searchedSavedMovies)
-      setSavedMoviesNotFoundMessage(searchedSavedMovies)
-      setIsLoading(false)
-      })
-      .catch((err) => console.log(err))
-    }
-  }
-
   // сохранение фильма в коллекцию 
 
-  function handleSaveMovieClick(movie) {
+  function handleSaveMovie(movie) {
     const isSaved = savedMovies.some((item) => item.movieId === movie.id);
       if (!isSaved) {
         mainApi.addMovie(movie)
@@ -227,11 +195,17 @@ function App() {
         });
       } else {
         const movieToDelete = savedMovies.find(item => item.movieId === movie.id);
-        handleDeleteMovieClick(movieToDelete)
+        handleDeleteMovie(movieToDelete)
       }
     }
 
-    // фильтр по чекбоксу
+    const filterMovies = (movies, keyWords, isShortFilm) => {
+      let filteredMovies = movies.filter(movie => movie.nameRU.toLowerCase().includes(keyWords.toLowerCase()));
+      if (isShortFilm) {
+        filteredMovies = filteredMovies.filter(movie => movie.duration <= 40);
+      }
+      return filteredMovies;
+    };
 
     const handleSearchMovies = (moviesPool, keyWords, isShortFilm) => {
       setIsLoading(true);
@@ -251,23 +225,6 @@ function App() {
       setCardsPerPageForRender();
       setIsLoading(false);
     };
-
-  
-    function setMoviesNotFoundMessage(movies) {
-      if (movies.length === 0) {
-        setMoviesNotFound(true)
-      } else {
-        setMoviesNotFound(false)
-      }
-    }
-  
-    function setSavedMoviesNotFoundMessage(movies) {
-      if (movies.length === 0) {
-        setSavedMoviesNotFound(true)
-      } else {
-        setSavedMoviesNotFound(false)
-      }
-    }
 
     const setCardsPerPageForRender = () => {
       if (document.documentElement.clientWidth >= 850) {
@@ -290,7 +247,7 @@ function App() {
 
 	// удаление фильма из коллекции
 
-  function handleDeleteMovieClick(movie) {
+  function handleDeleteMovie(movie) {
     mainApi.deleteMovie(movie._id)
     .then(() => {
       mainApi.getSavedMovies()
@@ -313,52 +270,63 @@ function App() {
   // загрузка фильмов с внешнего сервера
 
   React.useEffect(() => {
-    let jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      setIsLoading(true)
+    if (localStorage.getItem('movies') === null) {
       allMoviesApi.getAllMovies()
-      .then((movieData) => {
-        setIsFailed(false)
-        localStorage.setItem('movies',  JSON.stringify(movieData));
-        setAllMovies(movieData)
-
-        const searchedMovies = JSON.parse(localStorage.getItem('searchedMovies'));
-
-          if (searchedMovies) {
-            setSearchedMovies(searchedMovies)
-          }
-        setIsLoading(false)
-      })
-      .catch((err) => {
-        setIsFailed(true)
-        console.log(err);
-        setSearchInfoBox('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-      })
+        .then((moviesData) => {
+          console.log(moviesData);
+          const selectedMoviesData = moviesData.map((movie) => {
+            return {movieId: movie.id, 
+                    country: movie.country,
+                    director: movie.director,
+                    duration: movie.duration,
+                    year: movie.year,
+                    description: movie.description,
+                    image: `https://api.nomoreparties.co${movie.image.url}`,
+                    trailer: movie.trailerLink,
+                    nameRU: movie.nameRU,
+                    nameEN: movie.nameEN === null ? '' : movie.nameEN,
+                    thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}`}
+          });
+          setMovies(selectedMoviesData);
+          localStorage.setItem('movies', JSON.stringify(selectedMoviesData));
+        })
+        .catch((err) => {
+          console.log(err);
+          setSearchInfoBox('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+        });
+    } else {
+      setMovies(JSON.parse(localStorage.getItem('movies')))
     }
-  }, [loggedIn]);
+  }, []);
+
+  React.useEffect(() => {
+    if (localStorage.getItem('selectedMovies') !== null) {
+      setSelectedMovies(JSON.parse(localStorage.getItem('selectedMovies')))
+    }
+    setCardsPerPageForRender();
+  }, [])
 
   // загрузка сохраненных фильмов
 
-    React.useEffect(() => {
-      const jwt = localStorage.getItem('jwt');
-      if (jwt) {
-        mainApi.getSavedMovies()
-            .then((savedMovieData) => {
-              setIsFailed(false)
-              const userSavedMovies = savedMovieData.filter((movie) => {
-                return movie.owner === currentUser._id
-              })
-              setSavedMovies(userSavedMovies)
-            })
-            .catch((err) => {
-              setIsFailed(true)
-              console.log(err);
-            });
-          }
-        }, [currentUser._id]);
+  React.useEffect (() => {
+    mainApi.getSavedMovies()
+      .then ((movies) => {
+        setSavedMovies(movies);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, [savedMovies])
+
+  React.useEffect(() => {
+    setTimeout(function() {
+      setIsInfoTooltipOpen(false);
+    }, 2000)
+  }, [isInfoTooltipOpen])
 
   return (
       <CurrentUserContext.Provider value={currentUser}>
+      <SavedMoviesContext.Provider value={savedMovies}>
           <Switch>
     <Route exact path="/">
       <Main loggedIn={loggedIn} onMenu={handleMenu} />
@@ -368,30 +336,25 @@ function App() {
       component={Movies}
       onMenu={handleMenu}
       loggedIn={loggedIn}
-      onSaveClick={handleSaveMovieClick}
-      movies={searchedMovies}
-      savedMovies={savedMovies}
-      onSearchMovies={handleSearchMovies}
-      onMovieDelete={handleDeleteMovieClick}
-      isLoading={isLoading}
       isFailed={isFailed}
-      onLoadMore={handleLoadMore}
-      onMoviesNotFound={moviesNotFound}
+      onSearchMovies={handleSearchMovies} 
+      onLoadMore={handleLoadMore} 
+      onSaveMovie={handleSaveMovie} 
+      onDeleteMovie={handleDeleteMovie} 
+      selectedMovies={selectedMovies} 
+      currentCards={currentCards} 
+      isLoading={isLoading} 
       searchInfoBox={searchInfoBox}
+      movies={movies}
     />
     <ProtectedRoute
       path="/saved-movies"
       component={SavedMovies}
       onMenu={handleMenu}
       loggedIn={loggedIn}
-      movies={savedMovies}
-      checked={checkedSaved}
-      savedMovies={savedMovies}
-      isLoading={isLoading}
-      isFailed={isFailed}
-      onMovieDelete={handleDeleteMovieClick}
-      onSearchMovies={handleSearchMovies}
-      onSavedNotFound={savedMoviesNotFound}
+      onDeleteMovie={handleDeleteMovie}
+      onSearchMovies={handleSearchMovies} 
+      selectedSavedMovies={selectedSavedMovies} 
       searchInfoBox={searchInfoBox}
     />
     <ProtectedRoute
@@ -421,6 +384,7 @@ function App() {
           onClose={closePopup} 
           isSuccess={isSuccess} 
         />
+</SavedMoviesContext.Provider>
 </CurrentUserContext.Provider>
 );
 }
