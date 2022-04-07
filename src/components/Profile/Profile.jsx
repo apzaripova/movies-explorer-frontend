@@ -10,6 +10,7 @@ function Profile(props) {
   
   const currentUser = React.useContext(CurrentUserContext);
   const validation = useFormValidation();
+  const [isNotAvailable, setIsNotAvailable] = useState(false);
 
   const {name, email} = validation.values;
 

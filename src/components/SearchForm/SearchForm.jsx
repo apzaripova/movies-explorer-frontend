@@ -30,7 +30,6 @@ function SearchForm(props) {
     <>
       <section className="search-form">
           <form className="search-form__form" onSubmit={handleSubmit}>
-            <label className="search-form__field">
               <input
                 className="search-form__input"
                 type="text"
@@ -41,7 +40,6 @@ function SearchForm(props) {
                 onChange={handleChange}
                 required
               />
-            </label>
             <button 
             type="submit" 
             className="button_type_search"
