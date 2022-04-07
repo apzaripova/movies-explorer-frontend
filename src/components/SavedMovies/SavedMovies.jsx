@@ -20,9 +20,11 @@ function SavedMovies(props) {
         onSearchMovies={props.onSearchMovies} moviesPool={savedMovies}
         />
       <MoviesCardList 
-        cards={props.selectedSavedMovies} 
-        isSavedMoviesPage={true} 
-        onDeleteMovie={props.onDeleteMovie}
+        movies={props.movies}
+        onMovieDelete={props.onMovieDelete}
+        savedMovies={props.savedMovies}
+        savedMoviesNotFound={props.onSavedNotFound}
+        moviesNotFound={props.onMoviesNotFound}
         searchInfoBox={props.searchInfoBox}/>
       <Footer />
     </section>

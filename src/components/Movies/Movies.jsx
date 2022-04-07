@@ -14,16 +14,17 @@ function Movies(props) {
       <Header className="header header__white">
         <Navigation onClick={props.onMenu} />
       </Header>
-      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={props.movies} />
+      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={savedMovies} />
        <MoviesCardList
+          movies={props.movies}
+          isLoading={props.isLoading}
           isFailed={props.isFailed}
-          cards={props.currentCards} 
-          isLoading={props.isLoading} 
-          isSavedMoviesPage={false}
-          searchInfoBox={props.searchInfoBox} 
-          onSaveMovie={props.onSaveMovie} 
-          onDeleteMovie={props.onDeleteMovie}/>
-        <button className={`movies__more ${props.currentCards.length < props.selectedMovies.length ? '' : 'movies__more_invisible'}`}
+          savedMovies={props.savedMovies}
+          searchInfoBox={props.searchInfoBox}
+          onSaveClick={props.onSaveClick}
+          onMovieDelete={props.onMovieDelete}
+          moviesNotFound={props.onMoviesNotFound}/>
+        <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
               onClick={props.onLoadMore}>Ещё</button>
       <Footer />
     </section>

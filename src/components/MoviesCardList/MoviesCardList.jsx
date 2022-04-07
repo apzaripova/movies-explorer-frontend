@@ -7,21 +7,21 @@ function MoviesCardList(props) {
   return (
     <section className="movie-list">
       {props.isLoading && <Preloader />}
-      {props.cards.length === 0
+      {props.movies.length === 0
       ? <p className="movie-list__not-found">{props.searchInfoBox}</p>
       : <ul className="movie-list__container">
-        {props.cards.map((card) => {
+        {props.movies.map((movie, i) => {
           <MoviesCard
-            key={card.movieId} 
-            card={card}  
-            isSavedMoviesPage={props.isSavedMoviesPage}
-            onSaveMovie={props.onSaveMovie}
-            onDeleteMovie={props.onDeleteMovie}
+            key={i}
+            movie={movie}
+            onSaveClick={props.onSaveClick}
+            savedMovies={props.savedMovies}
+            onMovieDelete={props.onMovieDelete}
           />
         })}
       </ul>
     }
-  </section>) 
+  </section>)  
 };
 
 export default MoviesCardList;
