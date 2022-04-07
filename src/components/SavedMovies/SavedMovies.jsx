@@ -13,9 +13,7 @@ function SavedMovies(props) {
         <Navigation onClick={props.onMenu} />
       </Header>
       <SearchForm 
-        onSubmit={props.onHandleSubmit} 
-        onChangeCheckbox={props.onChangeCheckbox}
-        checked={props.checked}
+        onSearchMovies={props.onSearchMovies} moviesPool={savedMovies}
         />
       <MoviesCardList 
         movies={props.movies}
