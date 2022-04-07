@@ -2,3 +2,29 @@
     height: 100vh;
     flex-direction: column;
   }
+
+  .movies__more {
+    margin: 50px auto 80px;
+    display: block;
+    width: 320px;
+    height: 36px;
+    background-color: #fff;
+    border:  1px solid #E8E8E8;
+    border-radius: 5px;
+    padding: 0;
+    font-family: 'Inter', 'Arial', 'Helvetica', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000;
+  }
+  
+  .movies__more:hover {
+    cursor: pointer;
+    opacity: .5;
+    border: 1px solid #2BE080;
+  }
+  
+  .movies__more_invisible {
+    display: none;
+  }

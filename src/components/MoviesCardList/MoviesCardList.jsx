@@ -21,7 +21,7 @@ function MoviesCardList(props) {
         })}
       </ul>
     }
-  </section>)  
+  </section>) 
 };
 
 export default MoviesCardList;

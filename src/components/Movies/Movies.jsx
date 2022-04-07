@@ -17,13 +17,15 @@ function Movies(props) {
                   checked={props.checked} />
        <MoviesCardList
           movies={props.movies}
-          onSaveClick={props.onSaveClick}
-          onMovieDelete={props.onMovieDelete}
-          savedMovies={props.savedMovies}
-          moviesNotFound={props.onMoviesNotFound}
           isLoading={props.isLoading}
           isFailed={props.isFailed}
-          savedMovie={props.savedMovie}/>
+          savedMovies={props.savedMovies}
+          searchInfoBox={props.searchInfoBox}
+          onSaveClick={props.onSaveClick}
+          onMovieDelete={props.onMovieDelete}
+          moviesNotFound={props.onMoviesNotFound}/>
+        <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
+              onClick={props.onLoadMore}>Ещё</button>
       <Footer />
     </section>
   );

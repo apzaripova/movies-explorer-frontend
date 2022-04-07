@@ -39,6 +39,7 @@ function App() {
   const [userMovies, setUserMovies] = React.useState([]);
   const [sortedMovies, setSortedMovies] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [cardsPerPage, setCardsPerPage] = React.useState(0);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
@@ -317,6 +318,25 @@ function App() {
       }
     }
 
+    const setCardsPerPageForRender = () => {
+      if (document.documentElement.clientWidth >= 850) {
+        setCardsPerPage(12);
+      } else if (document.documentElement.clientWidth >= 500) {
+        setCardsPerPage(8);
+      } else {
+        setCardsPerPage(5);
+      }
+    }
+  
+    
+    const handleLoadMore = () => {
+      if (document.documentElement.clientWidth > 850) {
+        setCardsPerPage(cardsPerPage + 3);
+      } else {
+        setCardsPerPage(cardsPerPage + 2);
+      }
+    }
+
 	// удаление фильма из коллекции
 
   function handleDeleteMovieClick(movie) {
@@ -406,6 +426,7 @@ function App() {
       checked={checked}
       isLoading={isLoading}
       isFailed={isFailed}
+      onLoadMore={handleLoadMore}
       onMoviesNotFound={moviesNotFound}
       searchInfoBox={searchInfoBox}
     />
