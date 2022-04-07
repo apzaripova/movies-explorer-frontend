@@ -363,8 +363,7 @@ function App() {
     <Route exact path="/">
       <Main loggedIn={loggedIn} onMenu={handleMenu} />
     </Route>
-    <Route>
-      <Movies
+    <ProtectedRoute
       path="/movies"
       component={Movies}
       onMenu={handleMenu}
@@ -380,9 +379,7 @@ function App() {
       onMoviesNotFound={moviesNotFound}
       searchInfoBox={searchInfoBox}
     />
-    </Route>
-    <Route>
-      <SavedMovies
+    <ProtectedRoute
       path="/saved-movies"
       component={SavedMovies}
       onMenu={handleMenu}
@@ -397,7 +394,6 @@ function App() {
       onSavedNotFound={savedMoviesNotFound}
       searchInfoBox={searchInfoBox}
     />
-    </Route>
     <ProtectedRoute
       path="/profile"
       component={Profile}
