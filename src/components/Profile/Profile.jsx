@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 import Header from "../Header/Header";
@@ -11,20 +11,36 @@ function Profile(props) {
   const currentUser = React.useContext(CurrentUserContext);
   const validation = useFormValidation();
   const [isNotAvailable, setIsNotAvailable] = useState(false);
+  const [isIdle, setIsIdle] = useState(true);
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
 
   const {name, email} = validation.values;
+
+  const handleChangeInput = (e) => {
+    validation.handleChange(e);
+    if (currentUser.name === nameRef.current.value && currentUser.email === emailRef.current.value) return setIsIdle(true);
+    return setIsIdle(false);
+  };
 
   React.useEffect(() => {
       validation.setValues({
         name: currentUser.name, 
         email: currentUser.email})
+        return () => setIsNotAvailable(false);
   }, [currentUser]);
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    props.onUpdateUser({ name, email});
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsIdle(true);
+  setIsNotAvailable(true);
+  try {
+    await props.onUpdateUser({ name, email});
+  } finally {
+    setIsNotAvailable(false);
     validation.resetForm();
-}
+  }
+};
 
   return (
     <>
@@ -46,7 +62,8 @@ function Profile(props) {
               id="profile-name"
               name="name"
               value={validation.values.name || ""} 
-              onChange={validation.handleChange}
+              onChange={handleChangeInput}
+              disabled={isNotAvailable}
               placeholder="Ваше имя"
               minLength="2" 
               maxLength="40" 
@@ -64,7 +81,8 @@ function Profile(props) {
               id="profile-email"
               name="email" 
               value={validation.values.email || ""} 
-              onChange={validation.handleChange}
+              onChange={handleChangeInput}
+              disabled={isNotAvailable}
               placeholder="Ваш e-mail"
               minLength="2" 
               maxLength="40" 
@@ -79,7 +97,7 @@ function Profile(props) {
         <button 
           type="submit" 
           className={`button button_type_edit ${!validation.isFormValid ? "button_type_edit_disabled" : ""}`}
-          disabled={!validation.isFormValid}>
+          disabled={!validation.isFormValid || isIdle}>
           Редактировать
         </button>
         <Link className="link profile__signout-link" to='/' onClick={props.onSignOut}>Выйти из аккаунта</Link>
