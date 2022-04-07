@@ -23,7 +23,7 @@
 @import url("./components/Profile/Profile.css");
 
 /* Authorization */
-@import url("./components/Authorization/Authorization.css");
+@import url("./components/AuthForm/AuthForm.css");
 
 /* Sidebar */
 @import url("./components/Navigation/Navigation.css");
