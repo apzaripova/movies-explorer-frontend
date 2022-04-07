@@ -3,27 +3,25 @@ import "./SearchForm.css";
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 function SearchForm(props) {
-  const [keyword, setKeyword] = React.useState('');
-  const [error, setError] = React.useState('');
-  const [isFormValid, setIsFormValid] = React.useState(false);
+  const [keyWords, setKeyWords] = React.useState('');
+  const [isShortFilm, setIsShortFilm] = React.useState(false);
 
-  function handleChange(evt) {
-    setKeyword(evt.target.value);
-    setError('Введите ключевое слово');
-    setIsFormValid(evt.target.closest('form').checkValidity());
+  function handleKeyWordsChange(e) {
+    setKeyWords(e.target.value);
   }
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    if (isFormValid) {
-      props.onSubmit(keyword)
-    } else {
-      setError('Введите ключевое слово');
-    }
+  function handleFilterCheckbox (checkboxValue) {
+    setIsShortFilm(checkboxValue);
   }
 
-  function handleChangeCheckbox() {
-    props.onChangeCheckbox();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    
+    props.onSearchMovies(props.moviesPool, keyWords, isShortFilm);
+    
+    e.target.reset();
+    setIsShortFilm(false);
   }
 
   return (
@@ -37,7 +35,7 @@ function SearchForm(props) {
                 placeholder="Фильм"
                 minLength="2"
                 maxLength="40"
-                onChange={handleChange}
+                onChange={handleKeyWordsChange}
                 required
               />
             <button 
@@ -47,8 +45,7 @@ function SearchForm(props) {
           </button>
           </form>
         <FilterCheckbox 
-          onToggleCheckbox={handleChangeCheckbox}
-          checked={props.checked}
+          onFilterCheckbox={handleFilterCheckbox}
           />
       </section>
     </>

@@ -24,9 +24,10 @@ function App() {
 
   const [currentUser, setCurrentUser] = useState({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [searchInfoBox, setSearchInfoBox] = React.useState('');
   const [savedMovies, setSavedMovies] = React.useState([]);
+  const [selectedMovies, setSelectedMovies] = React.useState([]);
+  const [selectedSavedMovies, setSelectedSavedMovies] = React.useState(savedMovies);
+  const [searchInfoBox, setSearchInfoBox] = React.useState('');
   const [allMovies, setAllMovies] = React.useState([]);
   const [isFailed, setIsFailed] = React.useState(false);
   const [searchedMovies, setSearchedMovies] = React.useState([]);
@@ -36,11 +37,8 @@ function App() {
   const [savedMoviesNotFound, setSavedMoviesNotFound] = React.useState(false);
   const [isInfoTooltipActive, setInfoTooltipActive] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const [userMovies, setUserMovies] = React.useState([]);
-  const [sortedMovies, setSortedMovies] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [cardsPerPage, setCardsPerPage] = React.useState(0);
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
   let location = useLocation();
@@ -235,72 +233,25 @@ function App() {
 
     // фильтр по чекбоксу
 
-  function handleChangeCheckbox(evt) {
-    setChecked(!checked);
-    if (!checked) {
-      let searchedMovies = localStorage.getItem('searchedMovies');
-      const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies')); 
-      
-      if (!searchedMovies) {
-        setMoviesNotFound(false)
-      } else if (searchedbyKeyWordMovies.length === 0) {
-        setMoviesNotFound(true)
-      } else {
-        const shortMovies = searchShortMovie(searchedbyKeyWordMovies)
-        localStorage.setItem('searchedShortMovies', JSON.stringify(shortMovies));
-        setSearchedMovies(shortMovies)
-        setMoviesNotFoundMessage(shortMovies)
+    const handleSearchMovies = (moviesPool, keyWords, isShortFilm) => {
+      setIsLoading(true);
+          
+      const foundMovies = filterMovies(moviesPool, keyWords, isShortFilm);
+          
+      if (foundMovies.length === 0) {
+        setSearchInfoBox('Ничего не найдено');
       } 
-    } else {
-      let searchedMovies = localStorage.getItem('searchedMovies');
-      const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies'));
-
-      if (!searchedMovies) {
-        setMoviesNotFound(false)
+      
+      if (moviesPool === savedMovies) {
+        setSelectedSavedMovies(foundMovies);
       } else {
-        setSearchedMovies(searchedbyKeyWordMovies);
-        setMoviesNotFound(false)
+        localStorage.setItem('selectedMovies', JSON.stringify(foundMovies));
+        setSelectedMovies(foundMovies);
       }
-    }
-  }
+      setCardsPerPageForRender();
+      setIsLoading(false);
+    };
 
-    function handleSavedChangeCheckbox(evt) {
-      setCheckedSaved(!checkedSaved)
-      if (!checkedSaved) {
-        if (savedMovies.length === 0) {
-          setSavedMoviesNotFound(false)
-        } else {
-            const shortMovies = searchShortMovie(savedMovies)
-            localStorage.setItem('searchedSavedShortMovies', JSON.stringify(shortMovies));
-            setSavedMovies(shortMovies)
-            setSavedMoviesNotFoundMessage(shortMovies)
-          }
-      } else {
-        mainApi.getUserMovies()
-          .then(() => {
-            const searchedSavedMovies = JSON.parse(localStorage.getItem('searchedSavedMovies'));
-            if (!searchedSavedMovies) {
-              mainApi.getSavedMovies()
-                .then((savedMovieData) => {
-                  setIsFailed(false)
-                  const userSavedMovies = savedMovieData.filter((movie) => {
-                    return movie.owner === currentUser._id
-                  })
-                  setSavedMovies(userSavedMovies)
-                  setSavedMoviesNotFound(false)
-                })
-                .catch((err) => {
-                  setIsFailed(true)
-                  console.log(err);
-                });
-              } else {
-              setSavedMovies(searchedSavedMovies)
-              setSavedMoviesNotFoundMessage(searchedSavedMovies)
-            }
-          })
-          .catch((err) => console.log(err))
-        }
-      }
   
     function setMoviesNotFoundMessage(movies) {
       if (movies.length === 0) {
@@ -412,7 +363,8 @@ function App() {
     <Route exact path="/">
       <Main loggedIn={loggedIn} onMenu={handleMenu} />
     </Route>
-    <ProtectedRoute
+    <Route>
+      <Movies
       path="/movies"
       component={Movies}
       onMenu={handleMenu}
@@ -420,17 +372,17 @@ function App() {
       onSaveClick={handleSaveMovieClick}
       movies={searchedMovies}
       savedMovies={savedMovies}
-      onHandleSubmit={handleMovieSearchSubmit}
+      onSearchMovies={handleSearchMovies}
       onMovieDelete={handleDeleteMovieClick}
-      onChangeCheckbox={handleChangeCheckbox}
-      checked={checked}
       isLoading={isLoading}
       isFailed={isFailed}
       onLoadMore={handleLoadMore}
       onMoviesNotFound={moviesNotFound}
       searchInfoBox={searchInfoBox}
     />
-    <ProtectedRoute
+    </Route>
+    <Route>
+      <SavedMovies
       path="/saved-movies"
       component={SavedMovies}
       onMenu={handleMenu}
@@ -441,11 +393,11 @@ function App() {
       isLoading={isLoading}
       isFailed={isFailed}
       onMovieDelete={handleDeleteMovieClick}
-      onHandleSubmit={handleMovieSearchSubmit}
-      onChangeCheckbox={handleSavedChangeCheckbox}
+      onSearchMovies={handleSearchMovies}
       onSavedNotFound={savedMoviesNotFound}
       searchInfoBox={searchInfoBox}
     />
+    </Route>
     <ProtectedRoute
       path="/profile"
       component={Profile}

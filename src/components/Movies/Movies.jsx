@@ -12,9 +12,7 @@ function Movies(props) {
       <Header className="header header__white">
         <Navigation onClick={props.onMenu} />
       </Header>
-      <SearchForm onSubmit={props.onHandleSubmit} 
-                  onChangeCheckbox={props.onChangeCheckbox} 
-                  checked={props.checked} />
+      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={props.movies} />
        <MoviesCardList
           movies={props.movies}
           isLoading={props.isLoading}
