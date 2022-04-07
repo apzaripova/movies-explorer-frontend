@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 import Header from "../Header/Header";
@@ -10,37 +10,45 @@ function Profile(props) {
   
   const currentUser = React.useContext(CurrentUserContext);
   const validation = useFormValidation();
-  const [isNotAvailable, setIsNotAvailable] = useState(false);
-  const [isIdle, setIsIdle] = useState(true);
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
 
-  const {name, email} = validation.values;
-
-  const handleChangeInput = (e) => {
-    validation.handleChange(e);
-    if (currentUser.name === nameRef.current.value && currentUser.email === emailRef.current.value) return setIsIdle(true);
-    return setIsIdle(false);
-  };
+  const [userName, setUserName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [isFormValid, setIsFormValid] = React.useState(false);
 
   React.useEffect(() => {
-      validation.setValues({
-        name: currentUser.name, 
-        email: currentUser.email})
-        return () => setIsNotAvailable(false);
+    setUserName(currentUser.name);
+    setEmail(currentUser.email);
   }, [currentUser]);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsIdle(true);
-  setIsNotAvailable(true);
-  try {
-    await props.onUpdateUser({ name, email});
-  } finally {
-    setIsNotAvailable(false);
+  const handleUserNameChange = (e) => {
+    validation.handleChange(e);
+    if (currentUser.name !== e.target.value) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+    setUserName(e.target.value);
+  }
+
+  const handleEmailChange = (e) => {
+    validation.handleChange(e);
+    if (currentUser.email !== e.target.value) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+    setEmail(e.target.value);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    props.onUpdateUser({
+      name: userName,
+      email: email,
+    })
+    setIsFormValid(false);
     validation.resetForm();
   }
-};
 
   return (
     <>
@@ -61,9 +69,8 @@ const handleSubmit = async (e) => {
               className={`form-input form__input_type_profile ${!validation.validity.name && "form-input-error"}`} 
               id="profile-name"
               name="name"
-              value={validation.values.name || ""} 
-              onChange={handleChangeInput}
-              disabled={isNotAvailable}
+              value={userName}
+              onChange={handleUserNameChange}
               placeholder="Ваше имя"
               minLength="2" 
               maxLength="40" 
@@ -80,9 +87,8 @@ const handleSubmit = async (e) => {
               className={`form-input form__input_type_profile ${!validation.validity.email && "form-input-error"}`} 
               id="profile-email"
               name="email" 
-              value={validation.values.email || ""} 
-              onChange={handleChangeInput}
-              disabled={isNotAvailable}
+              value={email}
+              onChange={handleEmailChange}
               placeholder="Ваш e-mail"
               minLength="2" 
               maxLength="40" 
@@ -97,7 +103,7 @@ const handleSubmit = async (e) => {
         <button 
           type="submit" 
           className={`button button_type_edit ${!validation.isFormValid ? "button_type_edit_disabled" : ""}`}
-          disabled={!validation.isFormValid || isIdle}>
+          disabled={validation.isFormValid && isFormValid ? false : true}>
           Редактировать
         </button>
         <Link className="link profile__signout-link" to='/' onClick={props.onSignOut}>Выйти из аккаунта</Link>
