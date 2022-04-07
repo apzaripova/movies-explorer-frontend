@@ -25,6 +25,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [movies, setMovies] = useState([]);
+  const [searchInfoBox, setSearchInfoBox] = React.useState('');
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [allMovies, setAllMovies] = React.useState([]);
   const [isFailed, setIsFailed] = React.useState(false);
@@ -360,6 +361,7 @@ function App() {
       .catch((err) => {
         setIsFailed(true)
         console.log(err);
+        setSearchInfoBox('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
       })
     }
   }, [loggedIn]);
@@ -405,6 +407,7 @@ function App() {
       isLoading={isLoading}
       isFailed={isFailed}
       onMoviesNotFound={moviesNotFound}
+      searchInfoBox={searchInfoBox}
     />
     <ProtectedRoute
       path="/saved-movies"
@@ -420,6 +423,7 @@ function App() {
       onHandleSubmit={handleMovieSearchSubmit}
       onChangeCheckbox={handleSavedChangeCheckbox}
       onSavedNotFound={savedMoviesNotFound}
+      searchInfoBox={searchInfoBox}
     />
     <ProtectedRoute
       path="/profile"

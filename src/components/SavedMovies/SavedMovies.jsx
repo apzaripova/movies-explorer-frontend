@@ -18,15 +18,13 @@ function SavedMovies(props) {
         onChangeCheckbox={props.onChangeCheckbox}
         checked={props.checked}
         />
-        { props.isLoading ? <Preloader/> :
       <MoviesCardList 
         movies={props.movies}
         onMovieDelete={props.onMovieDelete}
         savedMovies={props.savedMovies}
         savedMoviesNotFound={props.onSavedNotFound}
         moviesNotFound={props.onMoviesNotFound}
-        isLoading={props.isLoading}
-        isFailed={props.isFailed}/> }
+        searchInfoBox={props.searchInfoBox}/>
       <Footer />
     </section>
   );
