@@ -5,8 +5,12 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import Footer from "../Footer/Footer";
+import { SavedMoviesContext } from '../../contexts/SavedMoviesContext';
 
 function SavedMovies(props) {
+
+  const savedMovies = React.useContext(SavedMoviesContext);
+
   return (
     <section className="saved-movies">
       <Header className="header header__white">

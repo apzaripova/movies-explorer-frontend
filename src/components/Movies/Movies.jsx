@@ -4,15 +4,17 @@ import Navigation from "../Navigation/Navigation";
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
+
 import "./Movies.css";
 
 function Movies(props) {
+
   return (
     <section className="movies">
       <Header className="header header__white">
         <Navigation onClick={props.onMenu} />
       </Header>
-      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={savedMovies} />
+      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={props.movies} />
        <MoviesCardList
           movies={props.movies}
           isLoading={props.isLoading}
