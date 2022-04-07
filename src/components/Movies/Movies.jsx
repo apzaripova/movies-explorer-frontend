@@ -23,7 +23,7 @@ function Movies(props) {
           searchInfoBox={props.searchInfoBox} 
           onSaveMovie={props.onSaveMovie} 
           onDeleteMovie={props.onDeleteMovie}/>
-        <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
+        <button className={`movies__more ${props.currentCards.length < props.selectedMovies.length ? '' : 'movies__more_invisible'}`}
               onClick={props.onLoadMore}>Ещё</button>
       <Footer />
     </section>
