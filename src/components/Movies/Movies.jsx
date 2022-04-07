@@ -2,7 +2,6 @@ import React  from "react";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import SearchForm from "../SearchForm/SearchForm";
-import Preloader from "../Preloader/Preloader";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import "./Movies.css";
@@ -16,7 +15,6 @@ function Movies(props) {
       <SearchForm onSubmit={props.onHandleSubmit} 
                   onChangeCheckbox={props.onChangeCheckbox} 
                   checked={props.checked} />
-        { props.isLoading ? <Preloader/> :
        <MoviesCardList
           movies={props.movies}
           onSaveClick={props.onSaveClick}
@@ -25,7 +23,7 @@ function Movies(props) {
           moviesNotFound={props.onMoviesNotFound}
           isLoading={props.isLoading}
           isFailed={props.isFailed}
-          savedMovie={props.savedMovie}/>}
+          savedMovie={props.savedMovie}/>
       <Footer />
     </section>
   );

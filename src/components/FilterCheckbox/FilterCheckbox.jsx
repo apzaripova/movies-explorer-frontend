@@ -2,6 +2,11 @@ import React from "react";
 import "./FilterCheckbox.css";
 
 function FilterCheckbox(props) {
+
+  function handleCheck(evt) {
+    props.onToggleCheckbox(evt.target.checked)
+  }
+  
   return (
     <section className="filter-checkbox">
       <label className="search-form__filter-container">
@@ -11,8 +16,8 @@ function FilterCheckbox(props) {
           name="short-movies"
           id="short-movies"
           className="search-form__filter-checkbox"
-          onChange={props.onFilter}
-          checked={props.isShortMovie}
+          checked={props.checked}
+          onChange={handleCheck}
         />
         <span className="search-form__filter-checkmark"></span>
       </label>

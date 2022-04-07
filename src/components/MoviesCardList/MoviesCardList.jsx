@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
+import Preloader from '../Preloader/Preloader';
 import {
   BREAKPOINT_MOBILE,
   BREAKPOINT_TABLET,
@@ -45,6 +46,7 @@ function MoviesCardList(props) {
 
   return (
     <section className="movie-list">
+      {props.isLoading && <Preloader />}
     <Route exact path="/movies">
       {props.moviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
       {!props.isLoading && props.isFailed && <p className="movie-list__not-found">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</p>}
