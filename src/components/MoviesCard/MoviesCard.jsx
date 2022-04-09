@@ -1,7 +1,7 @@
 import React from 'react';
 import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
-import './Movies.css';
+import './MoviesCard.css';
 
 function MoviesCard(props) {
 
