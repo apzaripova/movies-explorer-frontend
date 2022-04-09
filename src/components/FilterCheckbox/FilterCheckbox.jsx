@@ -3,10 +3,8 @@ import "./FilterCheckbox.css";
 
 function FilterCheckbox(props) {
 
-  const handleClick = (e) => {
-    let isChecked = e.target.checked;
-        
-    props.onFilterCheckbox(isChecked);
+  function handleCheck(evt) {
+    props.onToggleCheckbox(evt.target.checked)
   }
   
   return (
@@ -18,7 +16,8 @@ function FilterCheckbox(props) {
           name="short-movies"
           id="short-movies"
           className="search-form__filter-checkbox"
-          onClick={handleClick}
+          checked={props.checked}
+          onChange={handleCheck}
         />
         <span className="search-form__filter-checkmark"></span>
       </label>
