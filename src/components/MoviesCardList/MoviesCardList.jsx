@@ -2,6 +2,8 @@ import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 
+import './MoviesCardList.css';
+
 function MoviesCardList(props) {
 
   return (

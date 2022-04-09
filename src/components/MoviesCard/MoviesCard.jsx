@@ -1,6 +1,8 @@
 import React from 'react';
 import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
+import './Movies.css';
+
 function MoviesCard(props) {
 
   const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id);
