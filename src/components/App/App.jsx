@@ -178,39 +178,6 @@ function App() {
   }, []);
 
 
-
-  // поиск фильмов
-
-  function handleMovieSearchSubmit(input) {
-    if (location.pathname === '/movies') {
-        const searchedMovies = filterMovies(allMovies, input, checked)
-        if (checked) {
-          localStorage.setItem('searchedShortMovies', JSON.stringify(searchedMovies));
-          const searchedExtraMovies = searchMovieByKeyword(allMovies, input)
-          localStorage.setItem('searchedMovies', JSON.stringify(searchedExtraMovies));
-        } else {
-          localStorage.setItem('searchedMovies', JSON.stringify(searchedMovies));
-        }
-        setSearchedMovies(searchedMovies)
-        setMoviesNotFoundMessage(searchedMovies)
-      
-    } else if (location.pathname === '/saved-movies') {
-      setIsLoading(true)
-      mainApi.getSavedMovies()
-      .then((movies) => {
-        const userSavedMovies = movies.filter((movie) => {
-          return movie.owner === currentUser._id
-        })
-        const searchedSavedMovies = searchMovieByKeyword(userSavedMovies, input)
-          localStorage.setItem('searchedSavedMovies', JSON.stringify(searchedSavedMovies));
-      setSavedMovies(searchedSavedMovies)
-      setSavedMoviesNotFoundMessage(searchedSavedMovies)
-      setIsLoading(false)
-      })
-      .catch((err) => console.log(err))
-    }
-  }
-
   // сохранение фильма в коллекцию 
 
   function handleSaveMovieClick(movie) {
@@ -232,6 +199,14 @@ function App() {
     }
 
     // фильтр по чекбоксу
+
+    const filterMovies = (movies, keyWords, isShortFilm) => {
+      let filteredMovies = movies.filter(movie => movie.nameRU.toLowerCase().includes(keyWords.toLowerCase()));
+      if (isShortFilm) {
+        filteredMovies = filteredMovies.filter(movie => movie.duration <= 40);
+      }
+      return filteredMovies;
+    };
 
     const handleSearchMovies = (moviesPool, keyWords, isShortFilm) => {
       setIsLoading(true);
