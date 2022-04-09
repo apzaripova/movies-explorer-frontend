@@ -5,11 +5,8 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
 import Footer from "../Footer/Footer";
-import { SavedMoviesContext } from '../../contexts/SavedMoviesContext';
 
 function SavedMovies(props) {
-
-  const savedMovies = React.useContext(SavedMoviesContext);
 
   return (
     <section className="saved-movies">
@@ -17,14 +14,15 @@ function SavedMovies(props) {
         <Navigation onClick={props.onMenu} />
       </Header>
       <SearchForm 
-        onSearchMovies={props.onSearchMovies} moviesPool={savedMovies}
+        onSubmit={props.onHandleSubmit} 
+        onChangeCheckbox={props.onChangeCheckbox}
+        checked={props.checked}
         />
       <MoviesCardList 
         movies={props.movies}
         onMovieDelete={props.onMovieDelete}
         savedMovies={props.savedMovies}
         savedMoviesNotFound={props.onSavedNotFound}
-        moviesNotFound={props.onMoviesNotFound}
         searchInfoBox={props.searchInfoBox}/>
       <Footer />
     </section>

@@ -14,7 +14,9 @@ function Movies(props) {
       <Header className="header header__white">
         <Navigation onClick={props.onMenu} />
       </Header>
-      <SearchForm onSearchMovies={props.onSearchMovies} moviesPool={props.movies} />
+      <SearchForm onSubmit={props.onHandleSubmit} 
+                  onChangeCheckbox={props.onChangeCheckbox} 
+                  checked={props.checked}/>
        <MoviesCardList
           movies={props.movies}
           isLoading={props.isLoading}
