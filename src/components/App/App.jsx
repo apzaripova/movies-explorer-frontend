@@ -408,13 +408,13 @@ function App() {
       savedMovies={savedMovies}
       onHandleSubmit={handleMovieSearchSubmit}
       onMovieDelete={handleDeleteMovieClick}
+      onChangeCheckbox={handleChangeCheckbox}
+      checked={checked}
       isLoading={isLoading}
       isFailed={isFailed}
       onLoadMore={handleLoadMore}
       onMoviesNotFound={moviesNotFound}
       searchInfoBox={searchInfoBox}
-      onChangeCheckbox={handleChangeCheckbox}
-      checked={checked}
     />
     <ProtectedRoute
       path="/saved-movies"
@@ -426,8 +426,8 @@ function App() {
       savedMovies={savedMovies}
       isLoading={isLoading}
       isFailed={isFailed}
-      onMovieDelete={handleDeleteMovieClick}
       onHandleSubmit={handleMovieSearchSubmit}
+      onMovieDelete={handleDeleteMovieClick}
       onChangeCheckbox={handleSavedChangeCheckbox}
       onSavedNotFound={savedMoviesNotFound}
       searchInfoBox={searchInfoBox}

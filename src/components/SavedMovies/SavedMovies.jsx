@@ -23,7 +23,10 @@ function SavedMovies(props) {
         onMovieDelete={props.onMovieDelete}
         savedMovies={props.savedMovies}
         savedMoviesNotFound={props.onSavedNotFound}
-        searchInfoBox={props.searchInfoBox}/>
+        moviesNotFound={props.onMoviesNotFound}
+        searchInfoBox={props.searchInfoBox}
+        isLoading={props.isLoading}
+        isFailed={props.isFailed}/>
       <Footer />
     </section>
   );

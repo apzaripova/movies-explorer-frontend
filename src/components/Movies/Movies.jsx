@@ -25,7 +25,8 @@ function Movies(props) {
           searchInfoBox={props.searchInfoBox}
           onSaveClick={props.onSaveClick}
           onMovieDelete={props.onMovieDelete}
-          moviesNotFound={props.onMoviesNotFound}/>
+          moviesNotFound={props.onMoviesNotFound}
+          savedMovie={props.savedMovie}/>
         <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
               onClick={props.onLoadMore}>Ещё</button>
       <Footer />
