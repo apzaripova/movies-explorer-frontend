@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Route, useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import {
@@ -39,27 +39,8 @@ function MoviesCardList(props) {
     }
   }, [windowWidth, location]);
 
-  function calculateShowMore() {
-    return window.innerWidth > 1279 ? 3 : 2;
-  }
-
-  //number of movies to render
-  const [totalNumberToRender, setTotalNumberToRender] = useState(() => {
-    if (window.innerWidth > 1279) {
-      return 12;
-    } else if (window.innerWidth > 767) {
-      return 8;
-    } else return 5;
-  });
-
-  function handleMoreClick() {
-    const moviesNumber = totalNumberToRender + calculateShowMore();
-
-    if (moviesNumber < props.movies.length) {
-      setTotalNumberToRender(moviesNumber);
-    } else {
-      setTotalNumberToRender(props.movies.length);
-    }
+  const handleShowMoreMovies = () => {
+    setVisibleMovies(prevVisibleMovies => prevVisibleMovies + moviesToLoad)
   } 
 
   return (
@@ -80,6 +61,13 @@ function MoviesCardList(props) {
           ))
         }
       </ul>
+      <div className="movies-card-list__action">
+      <button 
+        className={`button button_type_more ${visibleMovies >= props.movies.length && 'button_type_more_disabled'}`}
+        type="button" 
+        aria-label="more button"
+        onClick={handleShowMoreMovies}>Еще</button>
+      </div>
     </Route>
     <Route path="/saved-movies">
     {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
