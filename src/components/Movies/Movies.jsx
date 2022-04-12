@@ -1,6 +1,7 @@
 import React  from "react";
 import Header from "../Header/Header";
 import Navigation from "../Navigation/Navigation";
+import Preloader from '../Preloader/Preloader';
 import SearchForm from "../SearchForm/SearchForm";
 import Footer from "../Footer/Footer";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
@@ -17,6 +18,7 @@ function Movies(props) {
       <SearchForm onSubmit={props.onHandleSubmit} 
                   onChangeCheckbox={props.onChangeCheckbox} 
                   checked={props.checked}/>
+          { props.isLoading ? <Preloader/> :
        <MoviesCardList
           movies={props.movies}
           isLoading={props.isLoading}
@@ -26,9 +28,7 @@ function Movies(props) {
           onSaveClick={props.onSaveClick}
           onMovieDelete={props.onMovieDelete}
           moviesNotFound={props.onMoviesNotFound}
-          savedMovie={props.savedMovie}/>
-        <button className={`movies__more ${props.movies.length < props.savedMovies.length ? '' : 'movies__more_invisible'}`}
-              onClick={props.onLoadMore}>Ещё</button>
+          savedMovie={props.savedMovie}/> }
       <Footer />
     </section>
   );

@@ -40,15 +40,15 @@ function SearchForm(props) {
                 onChange={handleChange}
                 required
               />
-              <span
-              className={`input-error input-error_type_movie ${!isFormValid && "input-error_active"}`} 
-              id="search-error">{error}
-              </span>
             <button 
             type="submit" 
             className={`button_type_search ${!isFormValid ? "button_type_search_disabled" : ""}`} 
             aria-label="search a movie">
           </button>
+          <span
+              className={`input-error input-error_type_movie ${!isFormValid && "input-error_active"}`} 
+              id="search-error">{error}
+              </span>
           </form>
         <FilterCheckbox 
           onToggleCheckbox={handleChangeCheckbox}
