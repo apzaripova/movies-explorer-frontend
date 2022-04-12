@@ -80,12 +80,6 @@ function MoviesCardList(props) {
           ))
         }
       </ul>
-        {props.movies.length > 0 &&
-        totalNumberToRender < props.movies.length && (
-          <button className="card-list__more" onClick={handleMoreClick}>
-            Ещё
-          </button>
-        )}
     </Route>
     <Route path="/saved-movies">
     {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}

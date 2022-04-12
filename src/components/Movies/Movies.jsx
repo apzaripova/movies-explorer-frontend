@@ -18,7 +18,9 @@ function Movies(props) {
       <SearchForm onSubmit={props.onHandleSubmit} 
                   onChangeCheckbox={props.onChangeCheckbox} 
                   checked={props.checked}/>
-          { props.isLoading ? <Preloader/> :
+        <Preloader
+        isLoading={props.isLoading}
+        />
        <MoviesCardList
           movies={props.movies}
           isLoading={props.isLoading}
@@ -28,7 +30,9 @@ function Movies(props) {
           onSaveClick={props.onSaveClick}
           onMovieDelete={props.onMovieDelete}
           moviesNotFound={props.onMoviesNotFound}
-          savedMovie={props.savedMovie}/> }
+          savedMovie={props.savedMovie}/>
+        <button className={`movies__button ${props.movies.length < props.savedMovies.length ? '' : 'movies__button_on'}`}
+              onClick={props.onLoadMore}>Ещё</button>
       <Footer />
     </section>
   );
