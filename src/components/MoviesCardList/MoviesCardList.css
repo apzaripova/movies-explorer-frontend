@@ -21,7 +21,7 @@
   margin: 0 auto;
 }
 
-.card-list__more {
+.button_type_more{
   color: black;
     display: flex;
     align-items: center;
@@ -38,7 +38,7 @@
     transition: 0.2s;
 }
 
-.card-list__more:hover {
+.button_type_more:hover {
   opacity: 0.8;
   cursor: pointer;
 }
