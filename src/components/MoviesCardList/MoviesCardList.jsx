@@ -39,8 +39,27 @@ function MoviesCardList(props) {
     }
   }, [windowWidth, location]);
 
-  const handleShowMoreMovies = () => {
-    setVisibleMovies(prevVisibleMovies => prevVisibleMovies + moviesToLoad)
+  function calculateShowMore() {
+    return window.innerWidth > 1279 ? 3 : 2;
+  }
+
+  //number of movies to render
+  const [totalNumberToRender, setTotalNumberToRender] = useState(() => {
+    if (window.innerWidth > 1279) {
+      return 12;
+    } else if (window.innerWidth > 767) {
+      return 8;
+    } else return 5;
+  });
+
+  function handleMoreClick() {
+    const moviesNumber = totalNumberToRender + calculateShowMore();
+
+    if (moviesNumber < props.movies.length) {
+      setTotalNumberToRender(moviesNumber);
+    } else {
+      setTotalNumberToRender(props.movies.length);
+    }
   } 
 
   return (
@@ -61,13 +80,12 @@ function MoviesCardList(props) {
           ))
         }
       </ul>
-      <div className="movies-card-list__action">
-      <button 
-        className={`button button_type_more ${visibleMovies >= props.movies.length && 'button_type_more_disabled'}`}
-        type="button" 
-        aria-label="more button"
-        onClick={handleShowMoreMovies}>Еще</button>
-      </div>
+        {props.movies.length > 0 &&
+        totalNumberToRender < props.movies.length && (
+          <button className="card-list__more" onClick={handleMoreClick}>
+            Ещё
+          </button>
+        )}
     </Route>
     <Route path="/saved-movies">
     {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}

@@ -199,6 +199,7 @@ function App() {
     // поиск фильмов
 
   function handleMovieSearchSubmit(input) {
+    setIsLoading(true);
     if (location.pathname === '/movies') {
         const searchedMovies = filterMovies(allMovies, input, checked)
         if (checked) {
