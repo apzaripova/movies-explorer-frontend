@@ -61,6 +61,13 @@ function MoviesCardList(props) {
           ))
         }
       </ul>
+      <div className="movies-card-list__action">
+      <button 
+        className={`button button_type_more ${visibleMovies >= props.movies.length && 'button_type_more_disabled'}`}
+        type="button" 
+        aria-label="more button"
+        onClick={handleShowMoreMovies}>Еще</button>
+      </div>
     </Route>
     <Route path="/saved-movies">
     {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
