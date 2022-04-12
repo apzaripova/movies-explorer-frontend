@@ -30,6 +30,7 @@ function SearchForm(props) {
     <>
       <section className="search-form">
           <form className="search-form__form" onSubmit={handleSubmit}>
+            <div className="search-form__container">
               <input
                 className="search-form__input"
                 type="text"
@@ -45,6 +46,7 @@ function SearchForm(props) {
             className={`button_type_search ${!isFormValid ? "button_type_search_disabled" : ""}`} 
             aria-label="search a movie">
           </button>
+          </div>
           <span
               className={`input-error input-error_type_movie ${!isFormValid && "input-error_active"}`} 
               id="search-error">{error}
