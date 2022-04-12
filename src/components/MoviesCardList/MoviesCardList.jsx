@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, useLocation, useState } from 'react-router-dom';
+import React, {useState} from 'react';
+import { Route, useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import {
   BREAKPOINT_MOBILE,
