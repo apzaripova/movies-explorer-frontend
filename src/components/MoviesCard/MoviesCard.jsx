@@ -1,7 +1,6 @@
 import React from 'react';
+import { Route } from 'react-router';
 import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
-
-import './MoviesCard.css';
 
 function MoviesCard(props) {
 
@@ -9,12 +8,8 @@ function MoviesCard(props) {
 
   const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
 
-  const handleCheckBoxClick = () => {
-    if (isSaved) {
-      props.onMovieDelete(props.movie);
-    } else {
+  function handleSaveClick() {
       props.onSaveClick(props.movie);
-    }
   }
 
   function handleOpenTrailerClick() {
@@ -30,17 +25,26 @@ function MoviesCard(props) {
 
   return (
     <li className="movie">
+      <Route path="/movies">
       <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
         <div className="movie__info">
           <div className="movie__description">
             <h2 className="movie__title">{props.movie.nameRU}</h2>
             <p className="movie__duration">{duration}</p>
           </div>
-          {props.savedMovies ?
-            <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/> :
-            <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleCheckBoxClick}/>
-          }
+          <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleSaveClick}/>
         </div>
+      </Route>
+      <Route path="/saved-movies">
+      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+        <div className="movie__info">
+          <div className="movie__description">
+            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <p className="movie__duration">{duration}</p>
+          </div>
+          <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/>
+        </div>
+      </Route>
     </li>
   )
 };
