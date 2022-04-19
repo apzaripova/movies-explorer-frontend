@@ -191,7 +191,7 @@ function App() {
       }
       setSearchedMovies(searchedMovies)
       setMoviesNotFoundMessage(searchedMovies)
-      setTimeout(()=> setIsLoading(false), 300)
+      setIsLoading(false)
 
     } else if (location.pathname === '/saved-movies') {
       setIsLoading(true)
