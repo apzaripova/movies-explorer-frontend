@@ -1,21 +1,21 @@
 import React from 'react';
 
-export function useWindowSize() {
-  const getWindowSize = () => {
-    const { innerWidth: width, innerHeight: height } = window;
-    return { width, height };
-  }
+function DisplayMovieCards() {
 
-  const [windowSize, setWindowSize] = React.useState(getWindowSize());
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
   React.useEffect(() => {
-    function handleResize() {
-      setWindowSize(getWindowSize());
-    }
+  
+    function handleWindowResize() {
+      setWindowWidth(window.innerWidth);
+   };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+   window.addEventListener("resize", handleWindowResize)
+    
+   return () => window.removeEventListener("resize", handleWindowResize)
+  },[]);
 
-  return windowSize;
-}
+  return { windowWidth };
+};
+
+export default DisplayMovieCards;

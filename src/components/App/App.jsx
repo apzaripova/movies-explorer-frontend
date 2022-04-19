@@ -297,15 +297,6 @@ function App() {
     }
   }
 
-
-  const handleLoadMore = () => {
-    if (document.documentElement.clientWidth > 850) {
-      setCardsPerPage(cardsPerPage + 3);
-    } else {
-      setCardsPerPage(cardsPerPage + 2);
-    }
-  }
-
   // сохранение фильма в коллекцию 
 
   function handleSaveMovieClick(movie) {
@@ -417,7 +408,6 @@ function App() {
           checked={checked}
           isLoading={isLoading}
           isFailed={isFailed}
-          onLoadMore={handleLoadMore}
           onMoviesNotFound={moviesNotFound}
           searchInfoBox={searchInfoBox}
         />
