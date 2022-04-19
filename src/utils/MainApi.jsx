@@ -1,4 +1,4 @@
-import { baseUrl } from "../utils/constants";
+import { MAIN_API } from "../utils/constants";
 
 class MainApi {
   constructor(options) {
@@ -10,24 +10,18 @@ class MainApi {
     return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getUserData() {
+  getUserData(token) {
     return fetch(`${this._url}${"users"}/${"me"}`, {
       method: "GET",
       credentials: 'include',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      }
+      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
     }).then(this._getResponse);
   }
 
-  editUserInfo(data) {
+  editUserInfo(data, token) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      },
+      headers: { ...this_headers, 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({
         name: data.name,
         email: data.email,
@@ -35,26 +29,20 @@ class MainApi {
     }).then(this._getResponse);
   }
 
-  getSavedMovies() {
+  getSavedMovies(token) {
     return fetch(`${this._url}/movies`, {
       method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      }
+      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
     })
-    .then((res) => {
-      return this._getResponse(res)
-    })
+      .then((res) => {
+        return this._getResponse(res)
+      })
   }
 
-  addMovie(data) {
+  addMovie(data, token) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      },
+      headers: { ...this_headers, 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({
         country: data.country || 'остуствует',
         director: data.director || 'остуствует',
@@ -69,27 +57,22 @@ class MainApi {
         nameEN: data.nameEN || 'остуствует',
       })
     })
-    .then((res) => {
-      return this._getResponse(res)
-    })
+      .then((res) => {
+        return this._getResponse(res)
+      })
   }
 
-  deleteMovie(movie) {
+  deleteMovie(movie, token) {
     return fetch(`${this._url}/movies/${movie}`, {
       method: "DELETE",
-      credentials: 'include',
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-      },
+      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
     }).then(this._getResponse);
   }
 }
 
 const mainApi = new MainApi({
-  url: "https://movies-explorer.azaripova.nomoredomains.rocks",
+  url: MAIN_API,
   headers: {
-    authorization: `Bearer ${localStorage.getItem("jwt")}`,
     "Content-Type": "application/json",
     Accept: "application/json",
   },

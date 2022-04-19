@@ -1,14 +1,14 @@
-import {MOVIES_URL} from "../utils/constants";
+import { MOVIES_URL } from "../utils/constants";
 
 export class MoviesApi {
-  constructor({address, headers}) {
+  constructor({ address, headers }) {
     this._address = address;
     this._headers = headers;
   }
 
   _checkResponse(res) {
     if (res.ok) {
-        return res.json()
+      return res.json()
     }
 
     return Promise.reject(`Error ${res.status}`)
@@ -16,11 +16,11 @@ export class MoviesApi {
 
   getAllMovies() {
     return fetch(`${this._address}`, {
-        headers: this._headers
+      headers: this._headers
     })
-    .then((res) => {
+      .then((res) => {
         return this._checkResponse(res)
-    })
+      })
   }
 
 }

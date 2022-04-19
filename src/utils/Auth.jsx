@@ -9,7 +9,7 @@ const getResponse = (res) => {
   return Promise.reject(res.status);
 };
 
-export const register = ({name, email, password}) => {
+export const register = ({ name, email, password }) => {
   return fetch(`${BASE_URL}/signup`, {
     method: "POST",
     headers: {
@@ -26,7 +26,7 @@ export const register = ({name, email, password}) => {
   });
 };
 
-export const authorize = ({email, password}) => {
+export const authorize = ({ email, password }) => {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
@@ -53,9 +53,7 @@ export const checkToken = (token) => {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${token}`
+      'Authorization': `Bearer ${token}`
     }
-  }).then((res) => {
-    return getResponse(res);
-  });
+  }).then(getResponse);
 };

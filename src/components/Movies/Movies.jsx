@@ -16,7 +16,7 @@ function Movies(props) {
 
   const [isShortMovies, setIsShortMovies] = React.useState(false);
   const [moreBtnVisibility, setMoreBtnVisibility] = React.useState(false);
-  const [amountCards, setAmountCards] = React.useState({total: 12, add: 3});
+  const [amountCards, setAmountCards] = React.useState({total: 4, add: 3});
 
   const { width } = useWindowSize();
 
