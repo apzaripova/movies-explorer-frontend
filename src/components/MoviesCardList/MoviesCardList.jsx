@@ -12,7 +12,7 @@ import {
   VISIBLE_MOVIES_DESKTOP,
   MOVIES_TO_LOAD_DESKTOP } 
   from '../../utils/constants';
-import DisplayMovieCards from '../../utils/UseWindowSize';
+import DisplayMovieCards from '../../utils/MoviesToDisplay';
 
 
 function MoviesCardList(props) {
