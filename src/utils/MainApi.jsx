@@ -1,4 +1,4 @@
-import { MAIN_API } from "../utils/constants";
+import { baseUrl, MAIN_API } from "../utils/constants";
 
 class MainApi {
   constructor(options) {
@@ -14,14 +14,14 @@ class MainApi {
     return fetch(`${this._url}${"users"}/${"me"}`, {
       method: "GET",
       credentials: 'include',
-      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
+      headers: { ...this._headers, 'Authorization': `Bearer ${token}` }
     }).then(this._getResponse);
   }
 
   editUserInfo(data, token) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: { ...this_headers, 'Authorization': `Bearer ${token}` },
+      headers: { ...this._headers, 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({
         name: data.name,
         email: data.email,
@@ -32,7 +32,7 @@ class MainApi {
   getSavedMovies(token) {
     return fetch(`${this._url}/movies`, {
       method: 'GET',
-      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
+      headers: { ...this._headers, 'Authorization': `Bearer ${token}` }
     })
       .then((res) => {
         return this._getResponse(res)
@@ -42,7 +42,7 @@ class MainApi {
   addMovie(data, token) {
     return fetch(`${this._url}/movies`, {
       method: 'POST',
-      headers: { ...this_headers, 'Authorization': `Bearer ${token}` },
+      headers: { ...this._headers, 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({
         country: data.country || 'остуствует',
         director: data.director || 'остуствует',
@@ -65,7 +65,7 @@ class MainApi {
   deleteMovie(movie, token) {
     return fetch(`${this._url}/movies/${movie}`, {
       method: "DELETE",
-      headers: { ...this_headers, 'Authorization': `Bearer ${token}` }
+      headers: { ...this._headers, 'Authorization': `Bearer ${token}` }
     }).then(this._getResponse);
   }
 }
