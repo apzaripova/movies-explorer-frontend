@@ -1,46 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Route, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Route } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
-import {
-  BREAKPOINT_MOBILE,
-  BREAKPOINT_TABLET,
-  BREAKPOINT_DESKTOP,
-  VISIBLE_MOVIES_MOBILE,
-  MOVIES_TO_LOAD_MOBILE,
-  VISIBLE_MOVIES_TABLET,
-  MOVIES_TO_LOAD_TABLET,
-  VISIBLE_MOVIES_DESKTOP,
-  MOVIES_TO_LOAD_DESKTOP } 
-  from '../../utils/constants';
-import DisplayMovieCards from '../../utils/MoviesToDisplay';
 
 function MoviesCardList(props) {
 
-  const [visibleMovies, setVisibleMovies] = React.useState(0);
-  const [moviesToLoad, setMoviesToLoad] = React.useState(0);
-  const { windowWidth } = DisplayMovieCards();
-  const location = useLocation();
+  function calculateShowMore() {
+    return window.innerWidth > 1279 ? 3 : 2;
+  }
 
-  React.useState(() => {
-    if (location.pathname === '/movies') {
-      if (windowWidth <= BREAKPOINT_MOBILE) {
-        setVisibleMovies(VISIBLE_MOVIES_MOBILE);
-        setMoviesToLoad(MOVIES_TO_LOAD_MOBILE);
-      } else if (windowWidth <= BREAKPOINT_TABLET) {
-        setVisibleMovies(VISIBLE_MOVIES_TABLET);
-        setMoviesToLoad(MOVIES_TO_LOAD_TABLET);
-      } else if (windowWidth < BREAKPOINT_DESKTOP && windowWidth >= BREAKPOINT_TABLET) {
-        setVisibleMovies(VISIBLE_MOVIES_DESKTOP);
-        setMoviesToLoad(MOVIES_TO_LOAD_DESKTOP);
-      } else if (windowWidth >= BREAKPOINT_DESKTOP) {
-        setVisibleMovies(VISIBLE_MOVIES_DESKTOP)
-        setMoviesToLoad(MOVIES_TO_LOAD_DESKTOP);
-      }
+  const [totalNumberToRender, setTotalNumberToRender] = useState(() => {
+    if (window.innerWidth > 1279) {
+      return 12;
+    } else if (window.innerWidth > 767) {
+      return 8;
+    } else return 5;
+  });
+
+  function handleMoreClick() {
+    const moviesNumber = totalNumberToRender + calculateShowMore();
+
+    if (moviesNumber < props.movies.length) {
+      setTotalNumberToRender(moviesNumber);
+    } else {
+      setTotalNumberToRender(props.movies.length);
     }
-  }, [windowWidth, location]);
-
-  const handleShowMoreMovies = () => {
-    setVisibleMovies(prevVisibleMovies => prevVisibleMovies + moviesToLoad)
   }
 
   return (
@@ -61,13 +44,6 @@ function MoviesCardList(props) {
           ))
         }
       </ul>
-      <div className="movies-card-list__action">
-      <button 
-        className={`button button_type_more ${visibleMovies >= props.movies.length && 'button_type_more_disabled'}`}
-        type="button" 
-        aria-label="more button"
-        onClick={handleShowMoreMovies}>Еще</button>
-      </div>
     </Route>
     <Route path="/saved-movies">
     {props.savedMoviesNotFound && <p className="movie-list__not-found">Ничего не найдено</p>}
@@ -85,6 +61,13 @@ function MoviesCardList(props) {
           }
         </ul>
     </Route>
+    {props.movies.length > 0 &&
+        !props.isSavedMoviesPage &&
+        totalNumberToRender < props.movies.length && (
+          <button className="card-list__more" onClick={handleMoreClick}>
+            Ещё
+          </button>
+        )}
   </section>)  
 };
 

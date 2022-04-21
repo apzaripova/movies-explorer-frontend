@@ -29,7 +29,8 @@ function Movies(props) {
           onSaveClick={props.onSaveClick}
           onMovieDelete={props.onMovieDelete}
           moviesNotFound={props.onMoviesNotFound}
-          savedMovie={props.savedMovie}/> }
+          savedMovie={props.savedMovie}
+          isSavedMoviesPage={props.isSavedMoviesPage}/> }
       <Footer />
     </section>
   );

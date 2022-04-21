@@ -3,22 +3,24 @@ import "./SearchForm.css";
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
 function SearchForm(props) {
-  const [keyword, setKeyword] = React.useState('');
+  const [searchedMovie, setSearchedMovie] = useState(props.keyword);
   const [error, setError] = React.useState('');
   const [isFormValid, setIsFormValid] = React.useState(false);
 
-  function handleChange(evt) {
-    setKeyword(evt.target.value);
-    setError('Введите ключевое слово');
-    setIsFormValid(evt.target.closest('form').checkValidity());
+  function handleSearchMovie(e) {
+    setSearchedMovie(e.target.value);
+    if (!props.isSavedMoviesPage && e.target.value.length < 1) {
+      setError("Нужно ввести ключевое слово");
+    }
   }
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    if (isFormValid) {
-      props.onSubmit(keyword)
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!props.isSavedMoviesPage && searchedMovie.length < 1) {
+      setError("Нужно ввести ключевое слово");
     } else {
-      setError('Введите ключевое слово');
+      props.onSubmit(searchedMovie);
+      setError("");
     }
   }
 
@@ -35,7 +37,8 @@ function SearchForm(props) {
                 type="text"
                 name="search"
                 placeholder="Фильм"
-                onChange={handleChange}
+                value={searchedMovie}
+                onChange={handleSearchMovie}
                 required
               />
             <button 
@@ -44,6 +47,7 @@ function SearchForm(props) {
             aria-label="search a movie">
           </button>
           </form>
+          <span className="search-form__input-error">{error}</span>
         <FilterCheckbox 
           onToggleCheckbox={handleChangeCheckbox}
           checked={props.checked}
