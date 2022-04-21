@@ -420,6 +420,7 @@ function App() {
           loggedIn={loggedIn}
           onSaveClick={handleSaveMovieClick}
           movies={searchedMovies}
+          savedMovies={savedMovies}
           onHandleSubmit={handleMovieSearchSubmit}
           onMovieDelete={handleDeleteMovieClick}
           onChangeCheckbox={handleChangeCheckbox}
