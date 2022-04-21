@@ -23,6 +23,7 @@ import NotFound from '../NotFound/NotFound';
 function App() {
 
   const [currentUser, setCurrentUser] = useState({});
+  const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [savedMovies, setSavedMovies] = React.useState([]);
   const [searchInfoBox, setSearchInfoBox] = React.useState('');
@@ -439,11 +440,12 @@ return (
   <CurrentUserContext.Provider value={currentUser}>
     <Routes>
     <Route path='/' element={renderMainLayout()} />
-      <Route path='/movies' element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <>
-              <Movies
-                loggedIn={loggedIn}
+    <Route
+            path="movies"
+            element={
+              user && (
+                <ProtectedRoute>
+                  <Movies
                 onMenu={handleMenu}
                 onSaveClick={handleSaveMovieClick}
                 movies={searchedMovies}
@@ -459,12 +461,11 @@ return (
                 onMoviesNotFound={moviesNotFound}
                 searchInfoBox={searchInfoBox}
               />
-            </>
-          </ProtectedRoute>
-        } />
+              </ProtectedRoute>
+              )} />
       <Route path='/saved-movies' element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <>
+          user && (
+            <ProtectedRoute>
               <SavedMovies
                 loggedIn={loggedIn}
                 onMenu={handleMenu}
@@ -481,21 +482,19 @@ return (
                 onSavedNotFound={savedMoviesNotFound}
                 searchInfoBox={searchInfoBox}
               />
-            </>
           </ProtectedRoute>
-        } />
+          )} />
         <Route path='/profile' element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <>
+          user && (
+            <ProtectedRoute>
               <Profile
                 onMenu={handleMenu}
                 loggedIn={loggedIn}
                 onSignOut={handleSignOut}
                 onUpdateUser={handleUpdateUser}
               />
-            </>
           </ProtectedRoute>
-        } />
+          )} />
         <Route path='/signup' element={navigateLoggedInUser()} />
         <Route path='/signin' element={navigateLoggedInUser()} />
         <Route path='*' element={ <NotFound /> } />
