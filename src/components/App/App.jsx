@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 
 import ProtectedRoute from '../../utils/ProtectedRoute';
@@ -7,7 +7,7 @@ import allMoviesApi from '../../utils/MoviesApi';
 import mainApi from "../../utils/MainApi";
 import * as auth from "../../utils/Auth";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { searchMovieByKeyword, searchShortMovie, filterMovies } from '../../utils/FilterMovies';
+import { searchMovieByKeyword, searchShortMovie } from '../../utils/FilterMovies';
 
 import Main from '../Main/Main';
 import Movies from "../Movies/Movies";
@@ -44,7 +44,7 @@ function App() {
   });
   const [savedMoviesKeyword, setSavedMoviesKeyword] = useState("");
 
-  const history = useHistory();
+  const navigate = useNavigate();
   let location = useLocation();
 
 
@@ -94,11 +94,10 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          history.push('/movies')
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
-          return data
+          return navigate('/movies', {replace: true});
         }
         mainApi.getUserData()
           .then((myData) => {
@@ -140,10 +139,10 @@ function App() {
 
   const handleSignOut = () => {
     localStorage.clear();
-    history.push('/');
     setLoggedIn(false);
     setCurrentUser({});
     setKeyword("");
+    return navigate('/', {replace: true});
   };
 
   function handleMenu() {
@@ -192,14 +191,16 @@ function App() {
     if (location.pathname === '/movies') {
       setIsLoading(true);
       const foundMoviesList = findMovie(name, allMovies);
-      if (foundMoviesList.length < 1) {
-        setMoviesNotFoundMessage("Ничего не найдено")
+      if (checked) {
+        localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
+        localStorage.setItem("keyword", name);
+        localStorage.setItem('searchedShortMovies', JSON.stringify(searchedMovies));
+      } else {
+        localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
       }
       setSearchedMovies(foundMoviesList)
-      localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
-      localStorage.setItem("keyword", name);
-      localStorage.setItem('searchedShortMovies', JSON.stringify(searchedMovies));
       setKeyword(name);
+      setMoviesNotFoundMessage(foundMoviesList)
       setTimeout(() => setIsLoading(false), 3000)
 
     } else if (location.pathname === '/saved-movies') {
@@ -401,71 +402,66 @@ React.useEffect(() => {
 
 return (
   <CurrentUserContext.Provider value={currentUser}>
-    <Switch>
-      <Route exact path="/">
-        <Main loggedIn={loggedIn} onMenu={handleMenu} />
-      </Route>
-      <ProtectedRoute
-        exact
+    <Routes>
+      <Route path="/" element={<Main loggedIn={loggedIn} onMenu={handleMenu}/>} />
+      <Route path="/signin" element={<Login onLogin={handleLogin} isLoading={isLoading}/>} />
+      <Route path="/signup" element={<Register onRegister={handleRegister}/>} />
+      <Route
         path="/movies"
-        component={Movies}
-        onMenu={handleMenu}
-        loggedIn={loggedIn}
-        onSaveClick={handleSaveMovieClick}
-        movies={searchedMovies}
-        savedMovies={savedMovies}
-        onHandleSubmit={handleMovieSearchSubmit}
-        keyword={keyword}
-        onMovieDelete={handleDeleteMovieClick}
-        onChangeCheckbox={handleChangeCheckbox}
-        isSavedMoviesPage={false}
-        checked={checked}
-        isLoading={isLoading}
-        isFailed={isFailed}
-        onMoviesNotFound={moviesNotFound}
-        searchInfoBox={searchInfoBox}
+        element={
+          <ProtectedRoute
+              component={Movies}
+              onMenu={handleMenu}
+              loggedIn={loggedIn}
+              onSaveClick={handleSaveMovieClick}
+              movies={searchedMovies}
+              savedMovies={savedMovies}
+              onHandleSubmit={handleMovieSearchSubmit}
+              keyword={keyword}
+              onMovieDelete={handleDeleteMovieClick}
+              onChangeCheckbox={handleChangeCheckbox}
+              isSavedMoviesPage={false}
+              checked={checked}
+              isLoading={isLoading}
+              isFailed={isFailed}
+              onMoviesNotFound={moviesNotFound}
+              searchInfoBox={searchInfoBox}
       />
-      <ProtectedRoute
-        exact
+        }/>
+      <Route
         path="/saved-movies"
-        component={SavedMovies}
-        onMenu={handleMenu}
-        loggedIn={loggedIn}
-        movies={savedMovies}
-        keyword={savedMoviesKeyword}
-        checked={checkedSaved}
-        savedMovies={savedMovies}
-        isLoading={isLoading}
-        isFailed={isFailed}
-        isSavedMoviesPage={true}
-        onHandleSubmit={handleMovieSearchSubmit}
-        onMovieDelete={handleDeleteMovieClick}
-        onChangeCheckbox={handleSavedChangeCheckbox}
-        onSavedNotFound={savedMoviesNotFound}
-        searchInfoBox={searchInfoBox}
+        element={
+          <ProtectedRoute
+              component={SavedMovies}
+              onMenu={handleMenu}
+              loggedIn={loggedIn}
+              movies={savedMovies}
+              keyword={savedMoviesKeyword}
+              checked={checkedSaved}
+              savedMovies={savedMovies}
+              isLoading={isLoading}
+              isFailed={isFailed}
+              isSavedMoviesPage={true}
+              onHandleSubmit={handleMovieSearchSubmit}
+              onMovieDelete={handleDeleteMovieClick}
+              onChangeCheckbox={handleSavedChangeCheckbox}
+              onSavedNotFound={savedMoviesNotFound}
+              searchInfoBox={searchInfoBox}
       />
-      <ProtectedRoute
-        exact
+        }/>
+      <Route
         path="/profile"
-        component={Profile}
-        onMenu={handleMenu}
-        loggedIn={loggedIn}
-        onSignOut={handleSignOut}
-        onUpdateUser={handleUpdateUser}
+        element={
+          <ProtectedRoute
+              component={Profile}
+              onMenu={handleMenu}
+              loggedIn={loggedIn}
+              onSignOut={handleSignOut}
+              onUpdateUser={handleUpdateUser}
       />
-      <Route exact path="/signin">
-        <Login
-          onLogin={handleLogin}
-          isLoading={isLoading} />
-      </Route>
-      <Route exact path="/signup">
-        <Register
-          onRegister={handleRegister} />
-      </Route>
-      <Route path="*">
-        <NotFound />
-      </Route>
-    </Switch>
+        }/>
+      <Route path="*" element={<NotFound/>} />
+    </Routes>
     <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
     <InfoTooltip
       isOpen={isInfoTooltipActive}
