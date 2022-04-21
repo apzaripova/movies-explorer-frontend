@@ -64,24 +64,6 @@ function App() {
     }
   }, [loggedIn]);
 
-  //check if logged in
-  const tokenCheck = (url) => {
-    setIsLoading(true)
-    auth
-      .checkToken()
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true)
-          history.push(url);
-        }
-      })
-      .catch((error) => console.log("Render error:", error))
-      .finally(() => setIsLoading(false))
-  };
-
-  // token check when page is opened
-  React.useEffect(() => tokenCheck(location.pathname), []);
-
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
     auth
@@ -112,7 +94,7 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          tokenCheck("/movies");
+          history.push('/movies')
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
