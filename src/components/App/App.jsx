@@ -443,7 +443,6 @@ return (
     <Route
             path="movies"
             element={
-              user && (
                 <ProtectedRoute>
                   <Movies
                 onMenu={handleMenu}
@@ -462,9 +461,8 @@ return (
                 searchInfoBox={searchInfoBox}
               />
               </ProtectedRoute>
-              )} />
-      <Route path='/saved-movies' element={
-          user && (
+              } />
+      <Route path='saved-movies' element={
             <ProtectedRoute>
               <SavedMovies
                 loggedIn={loggedIn}
@@ -483,9 +481,8 @@ return (
                 searchInfoBox={searchInfoBox}
               />
           </ProtectedRoute>
-          )} />
-        <Route path='/profile' element={
-          user && (
+          } />
+        <Route path='profile' element={
             <ProtectedRoute>
               <Profile
                 onMenu={handleMenu}
@@ -494,7 +491,7 @@ return (
                 onUpdateUser={handleUpdateUser}
               />
           </ProtectedRoute>
-          )} />
+          } />
         <Route path='/signup' element={navigateLoggedInUser()} />
         <Route path='/signin' element={navigateLoggedInUser()} />
         <Route path='*' element={ <NotFound /> } />
