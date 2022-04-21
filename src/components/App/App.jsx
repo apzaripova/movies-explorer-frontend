@@ -204,16 +204,20 @@ function App() {
 
     } else if (location.pathname === '/saved-movies') {
       setIsLoading(true)
-      const moviesList = localStorage.getItem("savedMovies");
-      const foundMoviesList = findMovie(name, JSON.parse(moviesList));
-
-      if (foundMoviesList.length < 1) {
-        setSavedMoviesNotFoundMessage("Ничего не найдено");
-      }
-      setSavedMovies(foundMoviesList);
+      mainApi.getSavedMovies(token)
+      .then((movies) => {
+        const userSavedMovies = movies.filter((movie) => {
+          return movie.owner === currentUser._id
+        })
+        const searchedSavedMovies = searchMovieByKeyword(userSavedMovies, name)
+          localStorage.setItem('searchedSavedMovies', JSON.stringify(searchedSavedMovies));
+      setSavedMovies(searchedSavedMovies)
+      setSavedMoviesNotFoundMessage(searchedSavedMovies)
       setSavedMoviesKeyword(name);
       setTimeout(() => setIsLoading(false), 3000)
-      }
+      })
+      .catch((err) => console.log(err))
+    }
   }
 
 // фильтр по чекбоксу
