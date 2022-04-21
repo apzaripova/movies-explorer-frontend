@@ -35,8 +35,6 @@ function SearchForm(props) {
                 type="text"
                 name="search"
                 placeholder="Фильм"
-                minLength="2"
-                maxLength="40"
                 onChange={handleChange}
                 required
               />

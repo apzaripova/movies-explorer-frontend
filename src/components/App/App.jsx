@@ -127,8 +127,9 @@ function App() {
   // редактирование профиля пользователя
 
   function handleUpdateUser(user) {
+    const token = localStorage.getItem('jwt');
     mainApi
-      .editUserInfo(user)
+      .editUserInfo(user, token)
       .then((data) => {
         setCurrentUser(data);
         setInfoTooltipActive(true)
