@@ -400,16 +400,34 @@ React.useEffect(() => {
   }
 }, [currentUser._id]);
 
+const renderMainLayout = () => {
+  return (
+    <>
+      <Main loggedIn={loggedIn} onMenu={handleMenu}/>
+    </>
+  )
+};
+
+const navigateLoggedInUser = () => {
+  if (location.pathname === '/signup') {
+    return loggedIn ? renderMainLayout() : <Register onRegister={handleRegister}/>
+  }
+  if (location.pathname === '/signin') {
+    return loggedIn ? renderMainLayout() : <Login onLogin={handleLogin} isLoading={isLoading}/>
+  }
+};
+
 return (
   <CurrentUserContext.Provider value={currentUser}>
     <Routes>
-      <Route path="/" element={<Main loggedIn={loggedIn} onMenu={handleMenu}/>} />
-      <Route path="/signin" element={<Login onLogin={handleLogin} isLoading={isLoading}/>} />
-      <Route path="/signup" element={<Register onRegister={handleRegister}/>} />
+      <Route path='/' element={renderMainLayout()} />
+      <Route path="/signin" element={navigateLoggedInUser()} />
+      <Route path="/signup" element={navigateLoggedInUser()} />
       <Route
         path="/movies"
         element={
-          <ProtectedRoute
+          <ProtectedRoute loggedIn={loggedIn}>
+            <Movies
               component={Movies}
               onMenu={handleMenu}
               loggedIn={loggedIn}
@@ -427,11 +445,13 @@ return (
               onMoviesNotFound={moviesNotFound}
               searchInfoBox={searchInfoBox}
       />
+      </ProtectedRoute>
         }/>
       <Route
         path="/saved-movies"
         element={
-          <ProtectedRoute
+          <ProtectedRoute loggedIn={loggedIn}>
+            <SavedMovies
               component={SavedMovies}
               onMenu={handleMenu}
               loggedIn={loggedIn}
@@ -448,17 +468,20 @@ return (
               onSavedNotFound={savedMoviesNotFound}
               searchInfoBox={searchInfoBox}
       />
+      </ProtectedRoute>
         }/>
       <Route
         path="/profile"
         element={
-          <ProtectedRoute
+          <ProtectedRoute loggedIn={loggedIn}>
+            <Profile
               component={Profile}
               onMenu={handleMenu}
               loggedIn={loggedIn}
               onSignOut={handleSignOut}
               onUpdateUser={handleUpdateUser}
       />
+      </ProtectedRoute>
         }/>
       <Route path="*" element={<NotFound/>} />
     </Routes>
