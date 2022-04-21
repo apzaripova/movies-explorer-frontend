@@ -1,7 +1,12 @@
 export const MOVIES_URL = 'https://api.nomoreparties.co/beatfilm-movies';
-export const MAIN_API = 'https://movies-explorer.azaripova.nomoredomains.rocks/';
+export const MAIN_API = 'https://movies-explorer.azaripova.nomoredomains.rocks';
 export const AUTH ="https://movies-explorer.azaripova.nomoredomains.rocks";
 export const baseUrl = "https://api.nomoreparties.co";
+
+const SCREEN_WIDTH = {
+    LARGE: 1280,
+    MEDIUM: 750,
+  }
 
 export const SHORT_MOVIE_DURATION = 40;
 export const MINUTES_SECONDS = 60;
