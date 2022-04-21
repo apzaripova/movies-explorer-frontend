@@ -43,7 +43,7 @@ function App() {
     return keyword == null ? "" : keyword;
   });
   const [savedMoviesKeyword, setSavedMoviesKeyword] = useState("");
-  
+
   const history = useHistory();
   let location = useLocation();
 
@@ -63,6 +63,24 @@ function App() {
         .finally(() => setIsLoading(false))
     }
   }, [loggedIn]);
+
+  //check if logged in
+  const tokenCheck = (url) => {
+    setIsLoading(true)
+    auth
+      .checkToken()
+      .then((res) => {
+        if (res) {
+          setLoggedIn(true)
+          history.push(url);
+        }
+      })
+      .catch((error) => console.log("Render error:", error))
+      .finally(() => setIsLoading(false))
+  };
+
+  // token check when page is opened
+  React.useEffect(() => tokenCheck(location.pathname), []);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
@@ -94,7 +112,7 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          history.push('/movies')
+          tokenCheck("/movies");
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
@@ -143,6 +161,7 @@ function App() {
     history.push('/');
     setLoggedIn(false);
     setCurrentUser({});
+    setKeyword("");
   };
 
   function handleMenu() {
