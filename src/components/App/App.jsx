@@ -443,6 +443,7 @@ return (
           <ProtectedRoute loggedIn={loggedIn}>
             <>
               <Movies
+                loggedIn={loggedIn}
                 onMenu={handleMenu}
                 onSaveClick={handleSaveMovieClick}
                 movies={searchedMovies}
@@ -465,6 +466,7 @@ return (
           <ProtectedRoute loggedIn={loggedIn}>
             <>
               <SavedMovies
+                loggedIn={loggedIn}
                 onMenu={handleMenu}
                 movies={savedMovies}
                 keyword={savedMoviesKeyword}
