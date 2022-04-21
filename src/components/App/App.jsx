@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 
 import ProtectedRoute from '../../utils/ProtectedRoute';
@@ -45,8 +45,23 @@ function App() {
   const [savedMoviesKeyword, setSavedMoviesKeyword] = useState("");
 
   const navigate = useNavigate();
-  let location = useLocation();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
+  function tokenCheck() {
+    const token = localStorage.getItem('jwt');
+    auth.checkToken(token)
+        .then((res) => {
+                if (res) {
+                    setCurrentUser(res);
+                }
+            })
+            .catch((err) => {
+                console.log(`Ошибка при проверке токена: ${err}`)
+                localStorage.removeItem('jwt');
+                
+            });
+    }
 
   React.useEffect(() => {
     const token = localStorage.getItem('jwt');
@@ -56,14 +71,15 @@ function App() {
         .then((res) => {
           if (res) {
             setLoggedIn(true)
+            tokenCheck();
             setCurrentUser(res)
-            navigate("/");
+            navigate(currentPath);
           }
         })
         .catch((err) => console.log(err))
         .finally(() => setIsLoading(false))
     }
-  }, [navigate]);
+  }, [loggedIn]);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
@@ -95,10 +111,11 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          navigate("/movies")
+          navigate('/movies')
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
+          return data
         }
         mainApi.getUserData()
           .then((myData) => {
@@ -140,8 +157,8 @@ function App() {
 
   const handleSignOut = () => {
     localStorage.clear();
+    navigate('/');
     setLoggedIn(false);
-    navigate("/");
     setCurrentUser({});
     setKeyword("");
   };
@@ -401,88 +418,72 @@ React.useEffect(() => {
   }
 }, [currentUser._id]);
 
-const renderMainLayout = () => {
-  return (
-    <>
-      <Main loggedIn={loggedIn} onMenu={handleMenu}/>
-    </>
-  )
-};
-
-const navigateLoggedInUser = () => {
-  if (location.pathname === '/signup') {
-    return loggedIn ? renderMainLayout() : <Register onRegister={handleRegister}/>
-  }
-  if (location.pathname === '/signin') {
-    return loggedIn ? renderMainLayout() : <Login onLogin={handleLogin} isLoading={isLoading}/>
-  }
-};
-
 return (
   <CurrentUserContext.Provider value={currentUser}>
     <Routes>
-      <Route path='/' element={renderMainLayout()} />
-      <Route
+      <Route exact path="/">
+        <Main loggedIn={loggedIn} onMenu={handleMenu} />
+      </Route>
+      <ProtectedRoute
+        exact
         path="/movies"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <Movies
-              onMenu={handleMenu}
-              loggedIn={loggedIn}
-              onSaveClick={handleSaveMovieClick}
-              movies={searchedMovies}
-              savedMovies={savedMovies}
-              onHandleSubmit={handleMovieSearchSubmit}
-              keyword={keyword}
-              onMovieDelete={handleDeleteMovieClick}
-              onChangeCheckbox={handleChangeCheckbox}
-              isSavedMoviesPage={false}
-              checked={checked}
-              isLoading={isLoading}
-              isFailed={isFailed}
-              onMoviesNotFound={moviesNotFound}
-              searchInfoBox={searchInfoBox}
+        component={Movies}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        onSaveClick={handleSaveMovieClick}
+        movies={searchedMovies}
+        savedMovies={savedMovies}
+        onHandleSubmit={handleMovieSearchSubmit}
+        keyword={keyword}
+        onMovieDelete={handleDeleteMovieClick}
+        onChangeCheckbox={handleChangeCheckbox}
+        isSavedMoviesPage={false}
+        checked={checked}
+        isLoading={isLoading}
+        isFailed={isFailed}
+        onMoviesNotFound={moviesNotFound}
+        searchInfoBox={searchInfoBox}
       />
-      </ProtectedRoute>
-        }/>
-      <Route
+      <ProtectedRoute
+        exact
         path="/saved-movies"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <SavedMovies
-              onMenu={handleMenu}
-              loggedIn={loggedIn}
-              movies={savedMovies}
-              keyword={savedMoviesKeyword}
-              checked={checkedSaved}
-              savedMovies={savedMovies}
-              isLoading={isLoading}
-              isFailed={isFailed}
-              isSavedMoviesPage={true}
-              onHandleSubmit={handleMovieSearchSubmit}
-              onMovieDelete={handleDeleteMovieClick}
-              onChangeCheckbox={handleSavedChangeCheckbox}
-              onSavedNotFound={savedMoviesNotFound}
-              searchInfoBox={searchInfoBox}
+        component={SavedMovies}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        movies={savedMovies}
+        keyword={savedMoviesKeyword}
+        checked={checkedSaved}
+        savedMovies={savedMovies}
+        isLoading={isLoading}
+        isFailed={isFailed}
+        isSavedMoviesPage={true}
+        onHandleSubmit={handleMovieSearchSubmit}
+        onMovieDelete={handleDeleteMovieClick}
+        onChangeCheckbox={handleSavedChangeCheckbox}
+        onSavedNotFound={savedMoviesNotFound}
+        searchInfoBox={searchInfoBox}
       />
-      </ProtectedRoute>
-        }/>
-      <Route
+      <ProtectedRoute
+        exact
         path="/profile"
-        element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <Profile
-              component={Profile}
-              onMenu={handleMenu}
-              loggedIn={loggedIn}
-              onSignOut={handleSignOut}
-              onUpdateUser={handleUpdateUser}
+        component={Profile}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        onSignOut={handleSignOut}
+        onUpdateUser={handleUpdateUser}
       />
-      </ProtectedRoute>
-        }/>
-      <Route path="/signin" element={navigateLoggedInUser()} />
-      <Route path="/signup" element={navigateLoggedInUser()} />
-      <Route path="*" element={<NotFound/>} />
+      <Route exact path="/signin">
+        <Login
+          onLogin={handleLogin}
+          isLoading={isLoading} />
+      </Route>
+      <Route exact path="/signup">
+        <Register
+          onRegister={handleRegister} />
+      </Route>
+      <Route path="*">
+        <NotFound />
+      </Route>
     </Routes>
     <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
     <InfoTooltip
