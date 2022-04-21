@@ -42,7 +42,8 @@ function App() {
     const keyword = localStorage.getItem("keyword");
     return keyword == null ? "" : keyword;
   });
-
+  const [savedMoviesKeyword, setSavedMoviesKeyword] = useState("");
+  
   const history = useHistory();
   let location = useLocation();
 
@@ -50,26 +51,16 @@ function App() {
   React.useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (token) {
+      setIsLoading(true)
       auth.checkToken(token)
         .then((res) => {
           if (res) {
             setLoggedIn(true)
             setCurrentUser(res)
-            if (location.pathname === '/movies') {
-              history.push('/movies')
-            } else if (location.pathname === '/profile') {
-              history.push('/profile')
-            } else if (location.pathname === '/saved-movies') {
-              history.push('/saved-movies')
-            } else if (location.pathname === '/signin') {
-              history.push('/movies')
-            } else if (location.pathname === '/signup') {
-              history.push('/movies')
-            }
-            return res
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false))
     }
   }, [loggedIn]);
 
@@ -212,275 +203,272 @@ function App() {
 
     } else if (location.pathname === '/saved-movies') {
       setIsLoading(true)
+      const moviesList = localStorage.getItem("savedMovies");
+      const foundMoviesList = findMovie(name, JSON.parse(moviesList));
+
+      if (foundMoviesList.length < 1) {
+        setSavedMoviesNotFoundMessage("Ничего не найдено");
+      }
+      setSavedMovies(foundMoviesList);
+      setSavedMoviesKeyword(name);
+      setTimeout(() => setIsLoading(false), 3000)
+      }
+  }
+
+// фильтр по чекбоксу
+
+function handleChangeCheckbox(evt) {
+  setChecked(!checked);
+  if (!checked) {
+    let searchedMovies = localStorage.getItem('searchedMovies');
+    const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies'));
+
+    if (!searchedMovies) {
+      setMoviesNotFound(false)
+    } else if (searchedbyKeyWordMovies.length === 0) {
+      setMoviesNotFound(true)
+    } else {
+      const shortMovies = searchShortMovie(searchedbyKeyWordMovies)
+      localStorage.setItem('searchedShortMovies', JSON.stringify(shortMovies));
+      setSearchedMovies(shortMovies)
+      setMoviesNotFoundMessage(shortMovies)
+    }
+  } else {
+    let searchedMovies = localStorage.getItem('searchedMovies');
+    const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies'));
+
+    if (!searchedMovies) {
+      setMoviesNotFound(false)
+    } else {
+      setSearchedMovies(searchedbyKeyWordMovies);
+      setMoviesNotFound(false)
+    }
+  }
+}
+
+function handleSavedChangeCheckbox(evt) {
+  const token = localStorage.getItem('jwt');
+  setCheckedSaved(!checkedSaved)
+  if (!checkedSaved) {
+    if (savedMovies.length === 0) {
+      setSavedMoviesNotFound(false)
+    } else {
+      const shortMovies = searchShortMovie(savedMovies)
+      localStorage.setItem('searchedSavedShortMovies', JSON.stringify(shortMovies));
+      setSavedMovies(shortMovies)
+      setSavedMoviesNotFoundMessage(shortMovies)
+    }
+  } else {
+    mainApi.getSavedMovies(token)
+      .then(() => {
+        const searchedSavedMovies = JSON.parse(localStorage.getItem('searchedSavedMovies'));
+        if (!searchedSavedMovies) {
+          mainApi.getSavedMovies(token)
+            .then((savedMovieData) => {
+              setIsFailed(false)
+              const userSavedMovies = savedMovieData.filter((movie) => {
+                return movie.owner === currentUser._id
+              })
+              setSavedMovies(userSavedMovies)
+              setSavedMoviesNotFound(false)
+            })
+            .catch((err) => {
+              setIsFailed(true)
+              console.log(err);
+            });
+        } else {
+          setSavedMovies(searchedSavedMovies)
+          setSavedMoviesNotFoundMessage(searchedSavedMovies)
+        }
+      })
+      .catch((err) => console.log(err))
+  }
+}
+
+
+function setMoviesNotFoundMessage(movies) {
+  if (movies.length === 0) {
+    setMoviesNotFound(true)
+  } else {
+    setMoviesNotFound(false)
+  }
+}
+
+function setSavedMoviesNotFoundMessage(movies) {
+  if (movies.length === 0) {
+    setSavedMoviesNotFound(true)
+  } else {
+    setSavedMoviesNotFound(false)
+  }
+}
+
+// сохранение фильма в коллекцию 
+
+function handleSaveMovieClick(movie) {
+  const token = localStorage.getItem('jwt');
+  const isSaved = savedMovies.some((item) => item.movieId === movie.id);
+  if (!isSaved) {
+    mainApi.addMovie(movie, token)
+      .then((newMovie) => {
+        setSavedMovies([...savedMovies, newMovie])
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSuccess(false)
+        setInfoTooltipActive(true)
+      });
+  } else {
+    const movieToDelete = savedMovies.find(item => item.movieId === movie.id);
+    handleDeleteMovieClick(movieToDelete)
+  }
+}
+
+// удаление фильма из коллекции
+
+function handleDeleteMovieClick(movie) {
+  const token = localStorage.getItem('jwt');
+  mainApi.deleteMovie(movie._id, token)
+    .then(() => {
       mainApi.getSavedMovies(token)
         .then((movies) => {
           const userSavedMovies = movies.filter((movie) => {
             return movie.owner === currentUser._id
           })
-          const searchedSavedMovies = searchMovieByKeyword(userSavedMovies, name)
-          localStorage.setItem('searchedSavedMovies', JSON.stringify(searchedSavedMovies));
-          setSavedMovies(searchedSavedMovies)
-          setSavedMoviesNotFoundMessage(searchedSavedMovies)
-        })
-        .catch((err) => console.log(err))
-        .finally(() => setIsLoading(false))
-    }
-  }
-
-  // фильтр по чекбоксу
-
-  function handleChangeCheckbox(evt) {
-    setChecked(!checked);
-    if (!checked) {
-      let searchedMovies = localStorage.getItem('searchedMovies');
-      const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies'));
-
-      if (!searchedMovies) {
-        setMoviesNotFound(false)
-      } else if (searchedbyKeyWordMovies.length === 0) {
-        setMoviesNotFound(true)
-      } else {
-        const shortMovies = searchShortMovie(searchedbyKeyWordMovies)
-        localStorage.setItem('searchedShortMovies', JSON.stringify(shortMovies));
-        setSearchedMovies(shortMovies)
-        setMoviesNotFoundMessage(shortMovies)
-      }
-    } else {
-      let searchedMovies = localStorage.getItem('searchedMovies');
-      const searchedbyKeyWordMovies = JSON.parse(localStorage.getItem('searchedMovies'));
-
-      if (!searchedMovies) {
-        setMoviesNotFound(false)
-      } else {
-        setSearchedMovies(searchedbyKeyWordMovies);
-        setMoviesNotFound(false)
-      }
-    }
-  }
-
-  function handleSavedChangeCheckbox(evt) {
-    const token = localStorage.getItem('jwt');
-    setCheckedSaved(!checkedSaved)
-    if (!checkedSaved) {
-      if (savedMovies.length === 0) {
-        setSavedMoviesNotFound(false)
-      } else {
-        const shortMovies = searchShortMovie(savedMovies)
-        localStorage.setItem('searchedSavedShortMovies', JSON.stringify(shortMovies));
-        setSavedMovies(shortMovies)
-        setSavedMoviesNotFoundMessage(shortMovies)
-      }
-    } else {
-      mainApi.getSavedMovies(token)
-        .then(() => {
-          const searchedSavedMovies = JSON.parse(localStorage.getItem('searchedSavedMovies'));
-          if (!searchedSavedMovies) {
-            mainApi.getSavedMovies(token)
-              .then((savedMovieData) => {
-                setIsFailed(false)
-                const userSavedMovies = savedMovieData.filter((movie) => {
-                  return movie.owner === currentUser._id
-                })
-                setSavedMovies(userSavedMovies)
-                setSavedMoviesNotFound(false)
-              })
-              .catch((err) => {
-                setIsFailed(true)
-                console.log(err);
-              });
-          } else {
-            setSavedMovies(searchedSavedMovies)
-            setSavedMoviesNotFoundMessage(searchedSavedMovies)
-          }
-        })
-        .catch((err) => console.log(err))
-    }
-  }
-
-
-  function setMoviesNotFoundMessage(movies) {
-    if (movies.length === 0) {
-      setMoviesNotFound(true)
-    } else {
-      setMoviesNotFound(false)
-    }
-  }
-
-  function setSavedMoviesNotFoundMessage(movies) {
-    if (movies.length === 0) {
-      setSavedMoviesNotFound(true)
-    } else {
-      setSavedMoviesNotFound(false)
-    }
-  }
-
-  // сохранение фильма в коллекцию 
-
-  function handleSaveMovieClick(movie) {
-    const token = localStorage.getItem('jwt');
-    const isSaved = savedMovies.some((item) => item.movieId === movie.id);
-    if (!isSaved) {
-      mainApi.addMovie(movie, token)
-        .then((newMovie) => {
-          setSavedMovies([...savedMovies, newMovie])
-        })
-        .catch((err) => {
-          console.log(err);
-          setIsSuccess(false)
-          setInfoTooltipActive(true)
-        });
-    } else {
-      const movieToDelete = savedMovies.find(item => item.movieId === movie.id);
-      handleDeleteMovieClick(movieToDelete)
-    }
-  }
-
-  // удаление фильма из коллекции
-
-  function handleDeleteMovieClick(movie) {
-    const token = localStorage.getItem('jwt');
-    mainApi.deleteMovie(movie._id, token)
-      .then(() => {
-        mainApi.getSavedMovies(token)
-          .then((movies) => {
-            const userSavedMovies = movies.filter((movie) => {
-              return movie.owner === currentUser._id
-            })
-            setSavedMovies(userSavedMovies)
-
-            if (userSavedMovies.length === 0) {
-              localStorage.removeItem('searchedSavedMovies')
-              localStorage.removeItem('searchedShortSavedMovies')
-            }
-          })
-          .catch((err) => console.log(err))
-      })
-      .catch((err) => console.log(err));
-  }
-
-  // загрузка фильмов с внешнего сервера
-
-  React.useEffect(() => {
-    let jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      setIsLoading(true)
-      allMoviesApi.getAllMovies()
-        .then((movieData) => {
-          setIsFailed(false)
-          localStorage.setItem('movies', JSON.stringify(movieData));
-          setAllMovies(movieData)
-
-          const searchedMovies = JSON.parse(localStorage.getItem('searchedMovies'));
-
-          if (searchedMovies) {
-            setSearchedMovies(searchedMovies)
-          }
-          setIsLoading(false)
-        })
-        .catch((err) => {
-          setIsFailed(true)
-          console.log(err);
-          setSearchInfoBox('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
-        })
-    }
-  }, [loggedIn]);
-
-  // загрузка сохраненных фильмов
-
-  React.useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      mainApi.getSavedMovies(token)
-        .then((savedMovieData) => {
-          setIsFailed(false)
-          const userSavedMovies = savedMovieData.filter((movie) => {
-            return movie.owner === currentUser._id
-          })
           setSavedMovies(userSavedMovies)
-          localStorage.setItem("savedMovies", JSON.stringify(userSavedMovies));
-        })
-        .catch((err) => {
-          setIsFailed(true)
-          console.log(err);
-        });
-    }
-  }, [currentUser._id]);
 
-  return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <Switch>
-        <Route exact path="/">
-          <Main loggedIn={loggedIn} onMenu={handleMenu} />
-        </Route>
-        <ProtectedRoute
-          exact
-          path="/movies"
-          component={Movies}
-          onMenu={handleMenu}
-          loggedIn={loggedIn}
-          onSaveClick={handleSaveMovieClick}
-          movies={searchedMovies}
-          savedMovies={savedMovies}
-          onHandleSubmit={handleMovieSearchSubmit}
-          onMovieDelete={handleDeleteMovieClick}
-          onChangeCheckbox={handleChangeCheckbox}
-          keyword={keyword}
-          isSavedMoviesPage={false}
-          checked={checked}
-          isLoading={isLoading}
-          isFailed={isFailed}
-          onMoviesNotFound={moviesNotFound}
-          searchInfoBox={searchInfoBox}
-        />
-        <ProtectedRoute
-          exact
-          path="/saved-movies"
-          component={SavedMovies}
-          onMenu={handleMenu}
-          loggedIn={loggedIn}
-          movies={savedMovies}
-          keyword={keyword}
-          checked={checkedSaved}
-          savedMovies={savedMovies}
-          isLoading={isLoading}
-          isFailed={isFailed}
-          isSavedMoviesPage={true}
-          onHandleSubmit={handleMovieSearchSubmit}
-          onMovieDelete={handleDeleteMovieClick}
-          onChangeCheckbox={handleSavedChangeCheckbox}
-          onSavedNotFound={savedMoviesNotFound}
-          searchInfoBox={searchInfoBox}
-        />
-        <ProtectedRoute
-          exact
-          path="/profile"
-          component={Profile}
-          onMenu={handleMenu}
-          loggedIn={loggedIn}
-          onSignOut={handleSignOut}
-          onUpdateUser={handleUpdateUser}
-        />
-        <Route exact path="/signin">
-          <Login
-            onLogin={handleLogin}
-            isLoading={isLoading} />
-        </Route>
-        <Route exact path="/signup">
-          <Register
-            onRegister={handleRegister} />
-        </Route>
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-      <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
-      <InfoTooltip
-        isOpen={isInfoTooltipActive}
-        onClose={closePopup}
-        isSuccess={isSuccess}
+          if (userSavedMovies.length === 0) {
+            localStorage.removeItem('searchedSavedMovies')
+            localStorage.removeItem('searchedShortSavedMovies')
+          }
+        })
+        .catch((err) => console.log(err))
+    })
+    .catch((err) => console.log(err));
+}
+
+// загрузка фильмов с внешнего сервера
+
+React.useEffect(() => {
+  let jwt = localStorage.getItem('jwt');
+  if (jwt) {
+    setIsLoading(true)
+    allMoviesApi.getAllMovies()
+      .then((movieData) => {
+        setIsFailed(false)
+        localStorage.setItem('movies', JSON.stringify(movieData));
+        setAllMovies(movieData)
+
+        const searchedMovies = JSON.parse(localStorage.getItem('searchedMovies'));
+
+        if (searchedMovies) {
+          setSearchedMovies(searchedMovies)
+        }
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        setIsFailed(true)
+        console.log(err);
+        setSearchInfoBox('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз');
+      })
+  }
+}, [loggedIn]);
+
+// загрузка сохраненных фильмов
+
+React.useEffect(() => {
+  const token = localStorage.getItem('jwt');
+  if (token) {
+    mainApi.getSavedMovies(token)
+      .then((savedMovieData) => {
+        setIsFailed(false)
+        const userSavedMovies = savedMovieData.filter((movie) => {
+          return movie.owner === currentUser._id
+        })
+        setSavedMovies(userSavedMovies)
+        localStorage.setItem("savedMovies", JSON.stringify(userSavedMovies));
+      })
+      .catch((err) => {
+        setIsFailed(true)
+        console.log(err);
+      });
+  }
+}, [currentUser._id]);
+
+return (
+  <CurrentUserContext.Provider value={currentUser}>
+    <Switch>
+      <Route exact path="/">
+        <Main loggedIn={loggedIn} onMenu={handleMenu} />
+      </Route>
+      <ProtectedRoute
+        exact
+        path="/movies"
+        component={Movies}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        onSaveClick={handleSaveMovieClick}
+        movies={searchedMovies}
+        savedMovies={savedMovies}
+        onHandleSubmit={handleMovieSearchSubmit}
+        keyword={keyword}
+        onMovieDelete={handleDeleteMovieClick}
+        onChangeCheckbox={handleChangeCheckbox}
+        isSavedMoviesPage={false}
+        checked={checked}
+        isLoading={isLoading}
+        isFailed={isFailed}
+        onMoviesNotFound={moviesNotFound}
+        searchInfoBox={searchInfoBox}
       />
-    </CurrentUserContext.Provider>
-  );
+      <ProtectedRoute
+        exact
+        path="/saved-movies"
+        component={SavedMovies}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        movies={savedMovies}
+        keyword={savedMoviesKeyword}
+        checked={checkedSaved}
+        savedMovies={savedMovies}
+        isLoading={isLoading}
+        isFailed={isFailed}
+        isSavedMoviesPage={true}
+        onHandleSubmit={handleMovieSearchSubmit}
+        onMovieDelete={handleDeleteMovieClick}
+        onChangeCheckbox={handleSavedChangeCheckbox}
+        onSavedNotFound={savedMoviesNotFound}
+        searchInfoBox={searchInfoBox}
+      />
+      <ProtectedRoute
+        exact
+        path="/profile"
+        component={Profile}
+        onMenu={handleMenu}
+        loggedIn={loggedIn}
+        onSignOut={handleSignOut}
+        onUpdateUser={handleUpdateUser}
+      />
+      <Route exact path="/signin">
+        <Login
+          onLogin={handleLogin}
+          isLoading={isLoading} />
+      </Route>
+      <Route exact path="/signup">
+        <Register
+          onRegister={handleRegister} />
+      </Route>
+      <Route path="*">
+        <NotFound />
+      </Route>
+    </Switch>
+    <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
+    <InfoTooltip
+      isOpen={isInfoTooltipActive}
+      onClose={closePopup}
+      isSuccess={isSuccess}
+    />
+  </CurrentUserContext.Provider>
+);
 }
 
 export default App;
