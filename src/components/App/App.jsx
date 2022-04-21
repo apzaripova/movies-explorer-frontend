@@ -45,26 +45,24 @@ function App() {
   const [savedMoviesKeyword, setSavedMoviesKeyword] = useState("");
 
   const history = useHistory();
-  const location = useLocation();
+  let location = useLocation();
 
-  const tokenCheck = (url) => {
-    setIsLoading(true)
+
+  React.useEffect(() => {
     const token = localStorage.getItem('jwt');
-    auth
-      .checkToken(token)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          history.push(url);
-        }
-      })
-      .catch((error) => console.log("Render error:", error))
-      .finally(() => setIsLoading(false));
-  };
-
-  // token check when page is opened
-  React.useEffect(() => tokenCheck(location.pathname), []);
-
+    if (token) {
+      setIsLoading(true)
+      auth.checkToken(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true)
+            setCurrentUser(res)
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => setIsLoading(false))
+    }
+  }, [loggedIn]);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
@@ -96,7 +94,7 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          tokenCheck("/movies");
+          history.push('/movies')
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
@@ -142,7 +140,7 @@ function App() {
 
   const handleSignOut = () => {
     localStorage.clear();
-    history.push("/");
+    history.push('/');
     setLoggedIn(false);
     setCurrentUser({});
     setKeyword("");
@@ -406,7 +404,7 @@ React.useEffect(() => {
 return (
   <CurrentUserContext.Provider value={currentUser}>
     <Switch>
-      <Route exact path="/" >
+      <Route exact path="/">
         <Main loggedIn={loggedIn} onMenu={handleMenu} />
       </Route>
       <ProtectedRoute
