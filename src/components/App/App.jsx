@@ -57,12 +57,13 @@ function App() {
           if (res) {
             setLoggedIn(true)
             setCurrentUser(res)
+            navigate("/");
           }
         })
         .catch((err) => console.log(err))
         .finally(() => setIsLoading(false))
     }
-  }, [loggedIn]);
+  }, [navigate]);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
@@ -94,10 +95,10 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
+          navigate("/movies")
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
-          return navigate('/movies', {replace: true});
         }
         mainApi.getUserData()
           .then((myData) => {
@@ -140,9 +141,9 @@ function App() {
   const handleSignOut = () => {
     localStorage.clear();
     setLoggedIn(false);
+    navigate("/");
     setCurrentUser({});
     setKeyword("");
-    return navigate('/', {replace: true});
   };
 
   function handleMenu() {
@@ -421,14 +422,11 @@ return (
   <CurrentUserContext.Provider value={currentUser}>
     <Routes>
       <Route path='/' element={renderMainLayout()} />
-      <Route path="/signin" element={navigateLoggedInUser()} />
-      <Route path="/signup" element={navigateLoggedInUser()} />
       <Route
         path="/movies"
         element={
           <ProtectedRoute loggedIn={loggedIn}>
             <Movies
-              component={Movies}
               onMenu={handleMenu}
               loggedIn={loggedIn}
               onSaveClick={handleSaveMovieClick}
@@ -452,7 +450,6 @@ return (
         element={
           <ProtectedRoute loggedIn={loggedIn}>
             <SavedMovies
-              component={SavedMovies}
               onMenu={handleMenu}
               loggedIn={loggedIn}
               movies={savedMovies}
@@ -483,6 +480,8 @@ return (
       />
       </ProtectedRoute>
         }/>
+      <Route path="/signin" element={navigateLoggedInUser()} />
+      <Route path="/signup" element={navigateLoggedInUser()} />
       <Route path="*" element={<NotFound/>} />
     </Routes>
     <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
