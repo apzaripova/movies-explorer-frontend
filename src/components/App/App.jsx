@@ -443,7 +443,7 @@ return (
     <Route
             path="movies"
             element={
-                <ProtectedRoute>
+                <ProtectedRoute loggedIn={loggedIn}>
                   <Movies
                 onMenu={handleMenu}
                 onSaveClick={handleSaveMovieClick}
@@ -463,7 +463,7 @@ return (
               </ProtectedRoute>
               } />
       <Route path='saved-movies' element={
-            <ProtectedRoute>
+            <ProtectedRoute loggedIn={loggedIn}>
               <SavedMovies
                 loggedIn={loggedIn}
                 onMenu={handleMenu}
@@ -483,7 +483,7 @@ return (
           </ProtectedRoute>
           } />
         <Route path='profile' element={
-            <ProtectedRoute>
+            <ProtectedRoute loggedIn={loggedIn}>
               <Profile
                 onMenu={handleMenu}
                 loggedIn={loggedIn}
