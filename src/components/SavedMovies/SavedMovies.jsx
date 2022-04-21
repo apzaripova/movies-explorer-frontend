@@ -16,12 +16,15 @@ function SavedMovies(props) {
       <SearchForm 
         onSubmit={props.onHandleSubmit} 
         onChangeCheckbox={props.onChangeCheckbox}
+        isSavedMoviesPage={props.isSavedMoviesPage}
         checked={props.checked}
+        keyword={props.keyword}
         />
       <MoviesCardList 
         movies={props.movies}
         onMovieDelete={props.onMovieDelete}
         savedMovies={props.savedMovies}
+        isSavedMoviesPage={props.isSavedMoviesPage}
         savedMoviesNotFound={props.onSavedNotFound}
         moviesNotFound={props.onMoviesNotFound}
         searchInfoBox={props.searchInfoBox}

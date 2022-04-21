@@ -16,8 +16,10 @@ function Movies(props) {
         <Navigation onClick={props.onMenu} />
       </Header>
       <SearchForm onSubmit={props.onHandleSubmit} 
-                  onChangeCheckbox={props.onChangeCheckbox} 
-                  checked={props.checked}/>
+                  onChangeCheckbox={props.onChangeCheckbox}
+                  isSavedMoviesPage={props.isSavedMoviesPage}
+                  checked={props.checked}
+                  keyword={props.keyword}/>
           {props.isLoading ? 
         (<Preloader />) :
        <MoviesCardList
