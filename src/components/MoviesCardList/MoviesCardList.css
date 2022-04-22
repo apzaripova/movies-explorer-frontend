@@ -38,6 +38,10 @@
   opacity: 0.6;
 }
 
+.movie-list__not-found {
+  text-align: center;
+}
+
 @media screen and (max-width: 450px) {
   .card-list__more {
     width: 240px;
