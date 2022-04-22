@@ -48,7 +48,7 @@ function App() {
   let location = useLocation();
 
 
-  React.useEffect(() => {
+  const tokenCheck = (url) => {
     const token = localStorage.getItem('jwt');
     if (token) {
       setIsLoading(true)
@@ -57,12 +57,15 @@ function App() {
           if (res) {
             setLoggedIn(true)
             setCurrentUser(res)
+            history.push(url);
           }
         })
         .catch((err) => console.log(err))
         .finally(() => setIsLoading(false))
     }
-  }, [loggedIn]);
+  };
+
+  React.useEffect(() => tokenCheck(location.pathname), []);
 
   function handleRegister({ name, email, password }) {
     setIsLoading(true)
@@ -94,7 +97,7 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('jwt', data.token)
-          history.push('/movies')
+          tokenCheck("/movies");
           setIsSuccess(true)
           setInfoTooltipActive(true)
           setIsLoading(false)
