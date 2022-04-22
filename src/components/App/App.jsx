@@ -404,6 +404,26 @@ React.useEffect(() => {
   }
 }, [currentUser._id]);
 
+const renderMainLayout = () => {
+  return (
+    <>
+      <Main loggedIn={loggedIn} onMenu={handleMenu} />
+    </>
+  )
+};
+
+const navigateLoggedInUser = () => {
+  if (location.pathname === '/signup') {
+    return loggedIn ? renderMainLayout() : <Register
+    onRegister={handleRegister} />
+  }
+  if (location.pathname === '/signin') {
+    return loggedIn ? renderMainLayout() : <Login
+    onLogin={handleLogin}
+    isLoading={isLoading} />
+  }
+};
+
 return (
   <CurrentUserContext.Provider value={currentUser}>
     <Switch>
@@ -458,15 +478,8 @@ return (
         onSignOut={handleSignOut}
         onUpdateUser={handleUpdateUser}
       />
-      <Route exact path="/signin">
-        <Login
-          onLogin={handleLogin}
-          isLoading={isLoading} />
-      </Route>
-      <Route exact path="/signup">
-        <Register
-          onRegister={handleRegister} />
-      </Route>
+      <Route path='/signup' component={navigateLoggedInUser()} />
+        <Route path='/signin' component={navigateLoggedInUser()} />
       <Route path="*">
         <NotFound />
       </Route>
