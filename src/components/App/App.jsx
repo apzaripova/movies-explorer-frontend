@@ -194,7 +194,7 @@ function App() {
     const token = localStorage.getItem('jwt');
     if (location.pathname === '/movies') {
       setIsLoading(true);
-      const foundMoviesList = findMovie(name, allMovies);
+      const foundMoviesList = findMovie(name, allMovies, checked);
       if (checked) {
         localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
         localStorage.setItem("keyword", name);
