@@ -176,6 +176,28 @@ function App() {
     }
   }, []);
 
+  function updateSavedMovies() {
+    const token = localStorage.getItem('jwt');
+    mainApi
+      .getSavedMovies(token)
+      .then((savedMovies) => {
+        if (currentUser != null) {
+          const userSavedMovies = savedMovies.data.filter(
+            (movie) => movie.owner === currentUser._id
+          );
+          setSavedMovies(userSavedMovies);
+          localStorage.setItem("savedMovies", JSON.stringify(userSavedMovies));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    updateSavedMovies();
+  }, [currentUser]);
+
   function findMovie(keyword, moviesList) {
     const foundMoviesList = moviesList.filter(
       (movie) =>
@@ -191,7 +213,6 @@ function App() {
   // поиск фильмов
 
   function handleMovieSearchSubmit(name) {
-    const token = localStorage.getItem('jwt');
     if (location.pathname === '/movies') {
       setIsLoading(true);
       const foundMoviesList = findMovie(name, allMovies);
@@ -208,20 +229,16 @@ function App() {
 
     } else if (location.pathname === '/saved-movies') {
       setIsLoading(true)
-      mainApi.getSavedMovies(token)
-      .then((movies) => {
-        const userSavedMovies = movies.filter((movie) => {
-          return movie.owner === currentUser._id
-        })
-        const searchedSavedMovies = searchMovieByKeyword(userSavedMovies, name)
-          localStorage.setItem('searchedSavedMovies', JSON.stringify(searchedSavedMovies));
-      setSavedMovies(searchedSavedMovies)
-      setSavedMoviesNotFoundMessage(searchedSavedMovies)
-      setSavedMoviesKeyword(name);
-      setTimeout(() => setIsLoading(false), 3000)
-      })
-      .catch((err) => console.log(err))
-    }
+      const moviesList = localStorage.getItem("savedMovies");
+      const foundMoviesList = findMovie(name, JSON.parse(moviesList));
+
+      if(foundMoviesList.length < 1) {
+        setSavedMoviesNotFoundMessage("Ничего не найдено")
+      }
+        setSavedMovies(foundMoviesList);
+        setSavedMoviesKeyword(name);
+        setTimeout(() => setIsLoading(false), 3000)
+      }
   }
 
 // фильтр по чекбоксу
