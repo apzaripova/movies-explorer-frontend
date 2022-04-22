@@ -194,18 +194,17 @@ function App() {
     const token = localStorage.getItem('jwt');
     if (location.pathname === '/movies') {
       setIsLoading(true);
-      const foundMoviesList = findMovie(name, allMovies, checked);
-      if (checked) {
+      const foundMoviesList = findMovie(name, allMovies);
+      if (foundMoviesList.length < 1) {
+        setMoviesNotFoundMessage(foundMoviesList)
+      }
+
+        setSearchedMovies(foundMoviesList)
         localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
         localStorage.setItem("keyword", name);
         localStorage.setItem('searchedShortMovies', JSON.stringify(searchedMovies));
-      } else {
-        localStorage.setItem('searchedMovies', JSON.stringify(foundMoviesList));
-      }
-      setSearchedMovies(foundMoviesList)
-      setKeyword(name);
-      setMoviesNotFoundMessage(foundMoviesList)
-      setTimeout(() => setIsLoading(false), 3000)
+        setKeyword(name);
+        setTimeout(() => setIsLoading(false), 3000)
 
     } else if (location.pathname === '/saved-movies') {
       setIsLoading(true)
