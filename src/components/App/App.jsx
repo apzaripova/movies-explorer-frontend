@@ -458,24 +458,16 @@ return (
         onSignOut={handleSignOut}
         onUpdateUser={handleUpdateUser}
       />
-      <Route exact path="/signin">
-        <Login
-          onLogin={handleLogin}
-          isLoading={isLoading} />
+      <Route path='/signup'>
+            {loggedIn ? <Redirect to='/movies' /> : <Register onRegister={handleRegister} />}
       </Route>
-      <Route exact path="/signup">
-        <Register
-          onRegister={handleRegister} />
+
+      <Route path='/signin'>
+              {loggedIn ? <Redirect to='/movies' /> : <Login onLogin={handleLogin} isLoading={isLoading} />}
       </Route>
       <Route path="*">
         <NotFound />
       </Route>
-      <Route>
-            {loggedIn ? <Redirect to='/movies' /> : <Redirect to='/signin' />}
-          </Route>
-          <Route>
-            <Redirect from='*' to='/errors' />
-          </Route>
     </Switch>
     <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
     <InfoTooltip
