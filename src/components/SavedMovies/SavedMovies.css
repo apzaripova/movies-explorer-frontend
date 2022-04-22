@@ -1,0 +1,14 @@
+.saved-movies {
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  .movies-message {
+    font: normal 400 14px/18px Inter, serif;
+    color: #858585;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    text-align: center;
+    flex: auto;
+  }

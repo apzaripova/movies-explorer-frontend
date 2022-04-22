@@ -1,27 +1,52 @@
 import React from 'react';
-import movie_pic from '../../images/jpg/movie-picture.jpg';
+import { Route } from 'react-router-dom';
+import {baseUrl, MINUTES_SECONDS} from '../../utils/constants';
 
-function MoviesCards(props) {
+function MoviesCard(props) {
 
-  const [isSaved, setIsSaved ] = React.useState(false);
+  const isSaved = props.savedMovies.some(item => item.movieId === props.movie.id);
 
-  function saveMovie() {
-    setIsSaved(!isSaved);
+  const movieCardClassName = `button button_type_save ${isSaved ? 'button_type_save-active' : ''}`;
+
+  function handleSaveClick() {
+      props.onSaveClick(props.movie);
   }
 
-  return (
-    <li className="card">
-      <img src={movie_pic} alt="movie_pic" className="card__image" />
-      <div className="card__info-box">
-        <div className="card__text-container">
-          <p className="card__title">33 слова о дизайне</p>
-          <p className="card__length-info">1ч42м</p>
-        </div>
-        <button type="button" className={`card__button ${props.savedMovies ? 'hidden' : isSaved ? 'card__button_state_saved': ''}`} onClick={saveMovie} />
-        <button type="button" className={`card__button card__button_state_cancel ${props.savedMovies ? '' : 'hidden'}`} />
-      </div>
-    </li>
-  );
-}
+  function handleOpenTrailerClick() {
+    window.open(props.movie.trailerLink || props.movie.trailer);
+  }
 
-export default MoviesCards;
+  function handleDeleteClick() {
+    props.onMovieDelete(props.movie);
+  }
+
+  const duration = `${Math.floor(props.movie.duration / MINUTES_SECONDS)}ч ${props.movie.duration % MINUTES_SECONDS}м`;
+  const movieImage = props.movie.image.url ? baseUrl + props.movie.image.url : props.movie.image;
+
+  return (
+    <li className="movie">
+      <Route path="/movies">
+      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+        <div className="movie__info">
+          <div className="movie__description">
+            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <p className="movie__duration">{duration}</p>
+          </div>
+          <button className={movieCardClassName} type="button" aria-label="delete button" onClick={handleSaveClick}/>
+        </div>
+      </Route>
+      <Route path="/saved-movies">
+      <img className="movie__image" src={movieImage} alt={props.movie.nameRU} onClick={handleOpenTrailerClick}/>
+        <div className="movie__info">
+          <div className="movie__description">
+            <h2 className="movie__title">{props.movie.nameRU}</h2>
+            <p className="movie__duration">{duration}</p>
+          </div>
+          <button className="button button_type_delete" type="button" aria-label="delete button" onClick={handleDeleteClick}/>
+        </div>
+      </Route>
+    </li>
+  )
+};
+
+export default MoviesCard;

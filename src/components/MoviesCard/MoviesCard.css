@@ -1,44 +1,67 @@
-.card {
-    background-color: #FDFDFD;
-    border-radius: 10px;
-    max-width: 100%;
-    max-height: 100%;
-    color: black;
-  }
+.movie {
+  border-radius: 6px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 350px;
+}
+
+.movie__image {
+  cursor: pointer;
+  position: relative;
+  height: 200px;
+}
+
+.movie__info {
+  max-height: 68px;
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
   
-  .card:hover {
-    box-shadow: 0 0 10px #8b8b8b;
-    cursor: pointer;
-  }
-  
-  .card__image {
-    width: 100%;
-    object-fit: contain;
-    border-radius: 10px 10px 0 0;
-  }
-  
-  .card__info-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 14px 12px;
-  }
-  
-  .card__title {
-    font-weight: 500;
-    font-size: 13px;
-    line-height: 16px;
-    margin: 0 0 10px 0;
-  }
-  
-  .card__length-info {
-    font-size: 11px;
-    line-height: 13px;
-    color: #8b8b8b;
-    margin: 0;
-  }
-  
-  .card__button {
+}
+
+.movie__description {
+  text-align: left;
+  max-width: 85%;
+}
+
+.movie__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.21;
+  margin-bottom: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.movie__duration {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 400;
+  color: #A0A0A0;
+  line-height: 1.21;
+}
+
+.movies-card-list__action {
+  width: 100%;
+  height: 166px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button_type_save {
     border: none;
     background-color: unset;
     background-image: url("../../images/svg/like.svg");
@@ -50,34 +73,47 @@
     outline: none;
     padding: 0;
     border-radius: 50%;
+}
+
+.button_type_save:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+.button_type_save-active {
+  background-image: url("../../images/svg/onLike.svg");
+}
+
+.button_type_delete {
+  display: block;
+  cursor: pointer;
+  width: 14px;
+  height: 12px;
+  border: none;
+  transition: transform .2s;
+  background-image: url("../../images/svg/delete.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
+  background-color: white;
+}
+
+@media screen and (max-width: 1279px) {
+  .movie {
+    width: 340px;
   }
-  
-  .card__button_state_saved {
-    background-image: url("../../images/svg/onLike.svg");
+
+  .movie__image {
+    height: 190px;
   }
-  
-  .card__button_state_cancel {
-    background-image: url("../../images/svg/delete.svg");
+}
+
+@media screen and (max-width: 750px) {
+  .movie {
+    width: 300px;
   }
-  
-  .card__button:hover {
-    cursor: pointer;
-    transform: scale(1.2);
+
+  .movie__image {
+    height: 168px;
   }
-  
-  @media screen and (max-width: 768px) {
-    .card {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  
-    .card__image {
-      width: 100%;
-      object-fit: contain;
-      border-radius: 10px 10px 0 0;
-    }
-  }
-  
-  @media screen and (max-width: 550px) {
-  
-  }
+}

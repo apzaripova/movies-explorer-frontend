@@ -1,96 +1,160 @@
 .profile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 74px auto 70px;
-    max-width: 410px;
-    color: black;
+  padding: 0 0 70px;
+  width: calc(100% - 70px*2);
+  margin: 0 auto;
+}
+
+.profile__info {
+  padding-top: 74px;
+  margin: 0 auto;
+  max-width: 410px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile__title {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+  color: #000000;
+  margin: 0 auto 123px;
+  max-width: 204px;
+}
+
+.profile__container-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile__container-item:nth-of-type(2) {
+  padding-top: 16px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.profile__container {
+  min-height: 266px;
+  text-align: left;
+}
+
+.profile__signout-link {
+  font-size: 13px;
+  line-height: 1.21;
+  font-weight: 500;
+  text-decoration: none;
+  color: #EE3465;
+}
+
+.form__input_type_profile {
+  border: none;
+  outline: none;
+  text-align: end;
+  width: 85%;
+}
+
+.profile__lable {
+  color: #000;
+  font: normal 400 11px/13px Inter,serif;
+  margin: 0;
+  padding: 0;
+}
+
+.profile__input-error {
+  font-size: 10px;
+  line-height: 1.21;
+  font-weight: 400;
+  color: #EE3465;
+  height: 12px;
+  grid-row: 2;
+  grid-column: -1/2;
+  text-align: right;
+}
+
+.button_type_edit {
+  font: normal 400 13px/15px Inter, serif;
+  border: none;
+  background-color: transparent;
+  width: fit-content;
+  height: 16px;
+  margin: 0 auto;
+  padding: 0;
+  cursor: pointer;
+}
+
+.button_type_edit:disabled {
+  opacity: 0.7;
+  cursor: default !important;
+}
+
+.button_type_edit:not([disabled]):hover {
+  opacity: 0.7;
+  transition: opacity 0.15s ease-in;
+}
+
+.button_type_edit:active {
+  text-shadow: 1px -5px 12px #bbbbbb;
+}
+
+.profile__signout-link {
+  font: normal 500 13px/15px Inter, serif;
+  color: #ff3055;
+  margin: 16px auto 70px;
+}
+
+.profile__signout-link:active {
+  text-shadow: 1px -5px 12px #bbbbbb;
+  color: #ff3056d2;
+}
+
+@media screen and (max-width: 1023px) {
+
+  .profile {
+    width: calc(100% - 30px*2);
+  }
+
+  .profile__info {
+    padding-top: 236px;
   }
   
-  .profile__greeting {
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 29px;
-    text-align: center;
-    margin: 0 auto 123px;
+  .profile__title {
+    margin-bottom: 96px;
   }
-  
-  .profile__data-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    border-bottom: 1px solid #424242;
-    padding: 0 0 17px 0;
+
+}
+
+@media screen and (max-width: 767px) {
+
+  .profile {
+    padding-bottom: 50px;
   }
-  
-  .profile__data-container:last-of-type {
-    border: none;
-    padding: 17px 0 0 0;
-    margin-bottom: 220px;
+
+  .profile__info {
+    padding-top: 150px;
   }
-  
-  .profile__text {
-    font-weight: 500;
-    font-size: 11px;
-    line-height: 13px;
-    margin: 0;
+
+}
+
+@media screen and (max-width: 425px) {
+
+  .profile {
+    padding-bottom: 40px;
+    width: calc(100% - 30px*2);
+    margin: 0 auto;
   }
-  
-  .profile__button {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 16px;
-    border: none;
-    padding: 0;
-    margin: 0 0 16px 0;
-    background-color: unset;
-    transition: 0.2s;
+
+  .profile__info {
+    padding-top: 50px;
   }
-  
-  .profile__button:hover {
-    opacity: 0.7;
-    cursor: pointer;
+
+  .profile__title {
+    margin-bottom: 80px;
   }
-  
-  .profile__button_type_signout {
-    color: #ee3465;
-    margin: 0;
-  }
-  
-  @media screen and (max-width: 768px) {
-    .profile {
-      height: 100vh;
-      margin: auto;
-    }
-  }
-  
-  @media screen and (max-width: 450px) {
-    .profile {
-      height: 100vh;
-      margin: 70px 30px 0;
-      justify-content: flex-start;
-      position: relative;
-    }
-  
-    .profile__greeting {
-      margin-bottom: 80px;
-    }
-  
-    .profile__greeting {
-      font-size: 24px;
-      line-height: 29px;
-    }
-  
-    .profile__text {
-      font-size: 11px;
-      line-height: 13px;
-    }
-  
-    .profile__button {
-      font-size: 12px;
-      line-height: 15px;
-    }
-  }
+
+}

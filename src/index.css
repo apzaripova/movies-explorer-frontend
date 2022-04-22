@@ -1,33 +1,34 @@
 @import url("./blocks/root/page.css");
 @import url("./vendor/normalize.css");
-@import url("./fonts/inter.css");
+@import url("./vendor/fonts/inter.css");
 
 /* General */
 @import url("./components/Header/Header.css");
 @import url("./components/Footer/Footer.css");
 
 /* Landing Page */
-@import url("./components/Navigation/Navigation.css");
-@import url("./components/About/About.css");
-@import url("./components/Technologies/Technologies.css");
-@import url("./components/Student/Student.css");
+@import url("./components/Promo/Promo.css");
+@import url("./components/AboutMe/AboutMe.css");
+@import url("./components/Techs/Techs.css");
+@import url("./components/AboutProject/AboutProject.css");
 
 /* Main */
-@import url("./components/SearchBar/SearchBar.css");
+@import url("./components/SearchForm/SearchForm.css");
+@import url("./components/Movies/Movies.css");
 @import url("./components/MoviesCardList/MoviesCardList.css");
 @import url("./components/MoviesCard/MoviesCard.css");
+@import url("./components/SavedMovies/SavedMovies.css");
 
 /* Profile */
 @import url("./components/Profile/Profile.css");
 
 /* Authorization */
-@import url("./components/Authorization/Authorization.css");
+@import url("./components/AuthForm/AuthForm.css");
 
 /* Sidebar */
-@import url("./components/Sidebar/Sidebar.css");
+@import url("./components/Navigation/Navigation.css");
+@import url("./components/FilterCheckbox/FilterCheckbox.css");
 
 /* NotFound */
 @import url("./components/NotFound/NotFound.css");
 
-/* Popup */
-@import url("./components/Popup/Popup.css");

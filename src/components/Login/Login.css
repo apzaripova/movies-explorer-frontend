@@ -1,0 +1,20 @@
+.login {
+    padding: 70px 0; 
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    justify-content: center;
+  }
+  
+  @media screen and (max-width: 425px) {
+  
+    .login {
+      padding: 56px 0 30px; 
+      width: calc(100% - 30px*2);
+      margin: 0 auto;
+    }
+  
+  }
