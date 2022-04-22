@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { Route, Switch, useHistory, useLocation, Redirect } from "react-router-dom";
 import "./App.css";
 
 import ProtectedRoute from '../../utils/ProtectedRoute';
@@ -470,6 +470,12 @@ return (
       <Route path="*">
         <NotFound />
       </Route>
+      <Route>
+            {loggedIn ? <Redirect to='/movies' /> : <Redirect to='/signin' />}
+          </Route>
+          <Route>
+            <Redirect from='*' to='/errors' />
+          </Route>
     </Switch>
     <PopupMenu isOpen={isMenuOpen} onClose={closeMenu} />
     <InfoTooltip
